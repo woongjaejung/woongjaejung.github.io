@@ -57,6 +57,8 @@ function renderProjects() {
     const fallback = el("p", "muted", translate(i18n, "projects_fallback", state.lang) + " ");
     const link = el("a", null, "github.com/wf4006hufman");
     link.href = "https://github.com/wf4006hufman";
+    link.target = "_blank";
+    link.rel = "noopener";
     fallback.appendChild(link);
     grid.replaceChildren(fallback);
     updated.textContent = "";
