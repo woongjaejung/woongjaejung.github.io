@@ -13,6 +13,22 @@ async function loadJSON(path) {
   return res.json();
 }
 
+function readStoredLang() {
+  try {
+    return localStorage.getItem("lang");
+  } catch {
+    return null;
+  }
+}
+
+function storeLang(lang) {
+  try {
+    localStorage.setItem("lang", lang);
+  } catch {
+    // storage blocked (e.g. private mode) — ignore, lang just won't persist
+  }
+}
+
 function el(tag, className, text) {
   const node = document.createElement(tag);
   if (className) node.className = className;
@@ -26,8 +42,12 @@ function applyStaticText() {
     node.textContent = translate(i18n, node.dataset.i18n, state.lang);
   });
   document.documentElement.lang = state.lang;
-  document.getElementById("lang-toggle").textContent =
-    state.lang === "en" ? "KO" : "EN";
+  const toggle = document.getElementById("lang-toggle");
+  toggle.textContent = state.lang === "en" ? "KO" : "EN";
+  toggle.setAttribute(
+    "aria-label",
+    state.lang === "en" ? "Switch to Korean" : "영어로 전환"
+  );
 
   const { profile } = state.content;
   document.getElementById("hero-name").textContent = profile.name;
@@ -175,7 +195,7 @@ function renderAll() {
 
 function setLang(lang) {
   state.lang = lang;
-  localStorage.setItem("lang", lang);
+  storeLang(lang);
   renderAll();
 }
 
@@ -183,7 +203,7 @@ async function init() {
   state.content = await loadJSON("data/content.json");
   try {
     const data = await loadJSON("data/repos.json");
-    state.repos = data.repos;
+    state.repos = Array.isArray(data.repos) ? data.repos : null;
     state.updatedAt = data.updated_at;
   } catch (err) {
     console.warn("repos.json unavailable:", err);
@@ -193,12 +213,16 @@ async function init() {
   document
     .getElementById("lang-toggle")
     .addEventListener("click", () => setLang(state.lang === "en" ? "ko" : "en"));
-  setLang(resolveInitialLang(localStorage.getItem("lang"), navigator.language));
+  setLang(resolveInitialLang(readStoredLang(), navigator.language));
 }
 
 init().catch((err) => {
   console.error(err);
   document.body.appendChild(
-    el("p", "muted", "Failed to load page data. Please refresh.")
+    el(
+      "p",
+      "muted",
+      "Failed to load page data. Please refresh. / 페이지 데이터를 불러오지 못했습니다. 새로고침해 주세요."
+    )
   );
 });
