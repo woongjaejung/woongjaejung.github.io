@@ -1,6 +1,15 @@
 {
-  "updated_at": "2026-07-28T17:39:13.969Z",
+  "updated_at": "2026-07-28T18:23:29.149Z",
   "repos": [
+    {
+      "name": "wf4006hufman.github.io",
+      "description": "Personal portfolio — bilingual, auto-synced with GitHub",
+      "language": null,
+      "topics": [],
+      "stars": 0,
+      "pushed_at": "2026-07-28T18:22:21Z",
+      "html_url": "https://github.com/wf4006hufman/wf4006hufman.github.io"
+    },
     {
       "name": "clinical-genomics-emr-bridge",
       "description": "Case study: a clinical genomics report-to-EMR bridge — approval gating, PHI-safe drift detection, adversarial safety review (sanitized portfolio)",
