@@ -1,0 +1,36 @@
+name: Update repos data
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Fetch repo data
+        run: node scripts/fetch-repos.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit and push if changed
+        run: |
+          if git diff --quiet -- data/repos.json; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "Woongjae (Jae) Jung"
+          git config user.email "woongjaej2@gmail.com"
+          git add data/repos.json
+          git commit -m "chore: update repos data"
+          git push
