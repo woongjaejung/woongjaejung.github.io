@@ -1,0 +1,59 @@
+{
+  "profile": {
+    "name": "Woongjae (Jae) Jung",
+    "tagline": {
+      "en": "Ph.D. Bioinformatics Scientist · NGS · Epigenomics · Multiomics · AI Engineer",
+      "ko": "생물정보학 박사 · NGS · 후성유전체학 · 멀티오믹스 · AI 엔지니어"
+    },
+    "about": {
+      "en": "Bioinformatics scientist working at the intersection of next-generation sequencing, epigenomics, multiomics, and AI engineering. I build pipelines and tools that turn raw sequencing data into clinical and research insight.",
+      "ko": "차세대 시퀀싱(NGS), 후성유전체학, 멀티오믹스, AI 엔지니어링의 교차점에서 일하는 생물정보학 연구자입니다. 원시 시퀀싱 데이터를 임상·연구 인사이트로 바꾸는 파이프라인과 도구를 만듭니다."
+    }
+  },
+  "skills": ["NGS", "Epigenomics", "Multiomics", "Python", "Machine Learning", "Google Cloud", "Pipeline Engineering"],
+  "exclude_repos": ["webflyx"],
+  "repo_overrides": {
+    "clinical-genomics-emr-bridge": {
+      "description_ko": "임상 유전체 리포트–EMR 연동 케이스 스터디 — 승인 게이팅, PHI 안전 드리프트 감지, 적대적 안전성 리뷰 (정제된 포트폴리오)"
+    },
+    "fieldrag": {
+      "description_ko": "NGS 필드 지원을 위한 grounded RAG + 에이전트 어시스턴트 (Google Cloud, Gemini)"
+    },
+    "bclconvert_ubuntu_version": {
+      "description_ko": "Oracle Linux 컨테이너 래퍼로 Ubuntu에서 Illumina bcl-convert 실행"
+    }
+  },
+  "i18n": {
+    "nav_about": { "en": "About", "ko": "소개" },
+    "nav_projects": { "en": "Projects", "ko": "프로젝트" },
+    "nav_experience": { "en": "Experience", "ko": "경력" },
+    "nav_publications": { "en": "Publications", "ko": "논문" },
+    "nav_education": { "en": "Education", "ko": "학력" },
+    "nav_contact": { "en": "Contact", "ko": "연락처" },
+    "heading_about": { "en": "About", "ko": "소개" },
+    "heading_skills": { "en": "Skills", "ko": "기술" },
+    "heading_projects": { "en": "Projects", "ko": "프로젝트" },
+    "heading_experience": { "en": "Experience", "ko": "경력" },
+    "heading_publications": { "en": "Publications", "ko": "논문" },
+    "heading_education": { "en": "Education", "ko": "학력" },
+    "heading_contact": { "en": "Contact", "ko": "연락처" },
+    "projects_auto_note": {
+      "en": "Automatically synced from my GitHub once a day.",
+      "ko": "GitHub에서 하루 한 번 자동으로 동기화됩니다."
+    },
+    "projects_fallback": {
+      "en": "Could not load project list — view them directly on GitHub.",
+      "ko": "프로젝트 목록을 불러오지 못했습니다 — GitHub에서 직접 확인해 주세요."
+    },
+    "footer_updated": { "en": "Projects updated", "ko": "프로젝트 갱신" }
+  },
+  "experience": [],
+  "publications": [],
+  "education": [],
+  "contact": {
+    "email": "woongjaej2@gmail.com",
+    "links": [
+      { "label": "GitHub", "url": "https://github.com/wf4006hufman" }
+    ]
+  }
+}
