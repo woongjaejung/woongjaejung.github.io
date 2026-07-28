@@ -29,13 +29,29 @@ async function fetchAllRepos() {
   return res.json();
 }
 
+async function loadExisting() {
+  try {
+    return JSON.parse(await readFile(OUT, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
 const excludeRepos = await loadExcludes();
 const repos = transformRepos(await fetchAllRepos(), { excludeRepos });
 assertValidRepos(repos);
 
+const existing = await loadExisting();
+let updatedAt = new Date().toISOString();
+if (existing && JSON.stringify(existing.repos) === JSON.stringify(repos)) {
+  updatedAt = existing.updated_at;
+}
+
 await mkdir(new URL("../data/", import.meta.url), { recursive: true });
-await writeFile(
-  OUT,
-  JSON.stringify({ updated_at: new Date().toISOString(), repos }, null, 2) + "\n"
-);
-console.log(`wrote ${repos.length} repos to data/repos.json`);
+await writeFile(OUT, JSON.stringify({ updated_at: updatedAt, repos }, null, 2) + "\n");
+
+if (existing && updatedAt === existing.updated_at) {
+  console.log(`no repo changes (kept updated_at ${updatedAt})`);
+} else {
+  console.log(`wrote ${repos.length} repos to data/repos.json`);
+}

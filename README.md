@@ -41,5 +41,5 @@ GITHUB_TOKEN=$(gh auth token) node scripts/fetch-repos.mjs
 ## Tests
 
 ```bash
-node --test tests/
+node --test
 ```

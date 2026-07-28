@@ -386,7 +386,7 @@ GITHUB_TOKEN=$(gh auth token) node scripts/fetch-repos.mjs
 ## Tests
 
 ```bash
-node --test tests/
+node --test
 ```
 ````
 
@@ -513,7 +513,7 @@ export function pick(field, lang) {
 
 - [ ] **Step 4: 전체 테스트 통과 확인**
 
-Run: `node --test tests/`
+Run: `node --test`
 Expected: PASS (Task 1 + Task 4 테스트 전부)
 
 - [ ] **Step 5: Commit**
@@ -1158,7 +1158,7 @@ Expected: `yaml ok` (PyYAML이 없으면 push 후 Actions 탭에서 문법 오�
 
 - [ ] **Step 3: 전체 테스트 재실행**
 
-Run: `node --test tests/`
+Run: `node --test`
 Expected: PASS 전부
 
 - [ ] **Step 4: Commit**
@@ -1181,7 +1181,7 @@ git commit -m "feat: add daily repo data update workflow"
 - [ ] **Step 1: 최종 점검**
 
 ```bash
-node --test tests/                       # 전부 PASS
+node --test                       # 전부 PASS
 git log --format='%an <%ae>' | sort -u   # 사용자 identity 단일 확인
 git status --porcelain                   # 클린 확인
 ```
