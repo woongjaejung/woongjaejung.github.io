@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Woongjae (Jae) Jung — Bioinformatics · AI</title>
+  <meta name="description" content="Portfolio of Woongjae (Jae) Jung — Ph.D. Bioinformatics Scientist (NGS, Epigenomics, Multiomics, AI)." />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>" />
+</head>
+<body>
+  <header id="site-nav">
+    <nav>
+      <a class="brand" href="#top">WJ</a>
+      <div class="nav-links">
+        <a href="#about" data-i18n="nav_about"></a>
+        <a href="#projects" data-i18n="nav_projects"></a>
+        <a href="#experience" data-i18n="nav_experience" data-section-link="experience"></a>
+        <a href="#publications" data-i18n="nav_publications" data-section-link="publications"></a>
+        <a href="#education" data-i18n="nav_education" data-section-link="education"></a>
+        <a href="#contact" data-i18n="nav_contact"></a>
+      </div>
+      <button id="lang-toggle" type="button" aria-label="Switch language">KO</button>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <h1 id="hero-name"></h1>
+      <p id="hero-tagline" class="tagline"></p>
+    </section>
+
+    <section id="about" class="section">
+      <h2 data-i18n="heading_about"></h2>
+      <p id="about-text"></p>
+      <h3 data-i18n="heading_skills"></h3>
+      <div id="skill-list" class="chip-row"></div>
+    </section>
+
+    <section id="projects" class="section">
+      <h2 data-i18n="heading_projects"></h2>
+      <p class="muted" data-i18n="projects_auto_note"></p>
+      <div id="project-grid"></div>
+      <p id="projects-updated" class="muted small"></p>
+    </section>
+
+    <section id="experience" class="section" hidden>
+      <h2 data-i18n="heading_experience"></h2>
+      <div id="experience-list"></div>
+    </section>
+
+    <section id="publications" class="section" hidden>
+      <h2 data-i18n="heading_publications"></h2>
+      <ol id="publication-list"></ol>
+    </section>
+
+    <section id="education" class="section" hidden>
+      <h2 data-i18n="heading_education"></h2>
+      <div id="education-list"></div>
+    </section>
+
+    <section id="contact" class="section">
+      <h2 data-i18n="heading_contact"></h2>
+      <div id="contact-links" class="chip-row"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p class="muted small">© <span id="year"></span> Woongjae (Jae) Jung</p>
+  </footer>
+
+  <script type="module" src="assets/js/main.js"></script>
+</body>
+</html>
