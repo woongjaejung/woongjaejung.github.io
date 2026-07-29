@@ -282,12 +282,26 @@ main { width: 58%; padding: 5.5rem 0 6rem; }
   .entry-meta { padding-top: 0; }
 }
 
+/* ── motion ──────────────────────────── */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.in { opacity: 1; transform: none; }
+
+.stagger { opacity: 0; transform: translateY(18px); animation: rise 0.6s ease forwards; }
+.side-head.stagger { animation-delay: 0.05s; }
+#side-nav.stagger { animation-delay: 0.13s; }
+.side-foot.stagger { animation-delay: 0.21s; }
+
+@keyframes rise { to { opacity: 1; transform: none; } }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   body, .card, .toggle, .side-link, .side-link::before, .contact-link,
   .arrow { transition: none; }
   .card:hover { transform: none; }
   .card:hover .arrow { transform: none; }
+  .reveal { transition: none; opacity: 1; transform: none; }
+  .stagger { animation: none; opacity: 1; transform: none; }
+  #spotlight { display: none; }
 }
 
 .toggle:focus-visible, a:focus-visible {

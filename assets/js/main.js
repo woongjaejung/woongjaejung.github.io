@@ -232,6 +232,61 @@ function renderContact() {
   document.getElementById("contact-links-main").replaceChildren(...build());
 }
 
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function initMotion() {
+  if (reduceMotion) return;
+
+  // 로드 스태거 — 사이드바 블록이 순차 등장
+  document
+    .querySelectorAll("#sidebar .side-head, #sidebar #side-nav, #sidebar .side-foot")
+    .forEach((node) => node.classList.add("stagger"));
+
+  // 스크롤 리빌 — 섹션이 뷰포트 진입 시 1회 페이드인
+  const sections = [...document.querySelectorAll("main .section")];
+  sections.forEach((s) => s.classList.add("reveal"));
+  const revealer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add("in");
+          revealer.unobserve(e.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+  sections.forEach((s) => revealer.observe(s));
+
+  // 스크롤 스파이 — 현재 섹션의 사이드 링크 활성화
+  const links = [...document.querySelectorAll(".side-link")];
+  const spy = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        links.forEach((l) =>
+          l.classList.toggle("active", l.getAttribute("href") === `#${e.target.id}`)
+        );
+      });
+    },
+    { rootMargin: "-40% 0px -50% 0px" }
+  );
+  sections.forEach((s) => spy.observe(s));
+
+  // 커서 스포트라이트 — 마우스가 있는 기기에서만
+  if (matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    const spot = document.getElementById("spotlight");
+    addEventListener(
+      "pointermove",
+      (e) => {
+        spot.style.setProperty("--mx", `${e.clientX}px`);
+        spot.style.setProperty("--my", `${e.clientY}px`);
+      },
+      { passive: true }
+    );
+  }
+}
+
 function renderAll() {
   applyStaticText();
   renderSkills();
@@ -267,6 +322,7 @@ async function init() {
     );
   setTheme(resolveInitialTheme(readStoredTheme()));
   setLang(resolveInitialLang(readStoredLang()));
+  initMotion();
 }
 
 init().catch((err) => {
