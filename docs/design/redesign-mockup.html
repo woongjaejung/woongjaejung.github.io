@@ -1,0 +1,391 @@
+<title>Portfolio Redesign Preview — Dark Engineer</title>
+<style>
+  :root {
+    --bg: #0a1628;
+    --bg-panel: #112240;
+    --text: #ccd6f6;
+    --text-body: #a2aec9;
+    --muted: #8892b0;
+    --accent: #64ffda;
+    --accent-soft: rgba(100, 255, 218, 0.08);
+    --border: rgba(136, 146, 176, 0.18);
+    --shadow: rgba(2, 12, 27, 0.7);
+    --spot: rgba(100, 255, 218, 0.05);
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", "Malgun Gothic", sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  :root[data-theme="light"] {
+    --bg: #f4f7fb;
+    --bg-panel: #ffffff;
+    --text: #17233b;
+    --text-body: #3d4b66;
+    --muted: #64748b;
+    --accent: #0f766e;
+    --accent-soft: rgba(15, 118, 110, 0.08);
+    --border: rgba(100, 116, 139, 0.25);
+    --shadow: rgba(15, 23, 42, 0.12);
+    --spot: rgba(15, 118, 110, 0.05);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-body);
+    font-family: var(--sans);
+    line-height: 1.65;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  /* mouse spotlight */
+  #spotlight {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(560px at var(--mx, 50%) var(--my, 30%), var(--spot), transparent 80%);
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    gap: 3rem;
+  }
+
+  /* ── sidebar ── */
+  aside {
+    width: 42%;
+    max-height: 100vh;
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 5.5rem 0 4rem;
+  }
+  aside h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 4.5vw, 3.1rem);
+    letter-spacing: -0.03em;
+    color: var(--text);
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+  .tagline { margin: 0.9rem 0 0; font-size: 1.05rem; color: var(--text); font-weight: 500; }
+  .intro { margin: 0.9rem 0 0; max-width: 26rem; }
+
+  nav { margin-top: 3.5rem; display: none; }
+  nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.55rem 0;
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color 0.2s;
+  }
+  nav a::before {
+    content: "";
+    width: 2rem;
+    height: 1px;
+    background: var(--muted);
+    transition: width 0.25s ease, background 0.25s ease;
+  }
+  nav a:hover, nav a.active { color: var(--text); }
+  nav a:hover::before, nav a.active::before { width: 4rem; background: var(--accent); }
+
+  .side-foot { margin-top: auto; padding-top: 3rem; display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; }
+  .icon-link {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s, transform 0.2s;
+    display: inline-flex;
+  }
+  .icon-link:hover { color: var(--accent); transform: translateY(-2px); }
+  .toggle {
+    font: 600 0.72rem var(--mono);
+    letter-spacing: 0.1em;
+    color: var(--text);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.35rem 0.85rem;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+  }
+  .toggle:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 12px var(--accent-soft); }
+
+  /* ── content ── */
+  main { width: 58%; padding: 5.5rem 0 6rem; }
+  section { margin-bottom: 5.5rem; }
+  .label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+  .label::after { content: ""; flex: 1; max-width: 8rem; height: 1px; background: var(--border); }
+  .about p { max-width: 34rem; margin: 0 0 1rem; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.4rem; }
+  .chip {
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 999px;
+    padding: 0.28rem 0.8rem;
+  }
+
+  /* cards as rows */
+  .card {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    gap: 0.2rem 1.4rem;
+    padding: 1.25rem;
+    margin: 0 -1.25rem 0.4rem;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  }
+  .card:hover {
+    background: var(--bg-panel);
+    border-color: var(--border);
+    box-shadow: 0 12px 30px -18px var(--shadow), inset 0 0 0 1px var(--accent-soft);
+    transform: translateY(-2px);
+  }
+  .card .meta {
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    color: var(--muted);
+    padding-top: 0.25rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .card h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .card .arrow { display: inline-block; transition: transform 0.25s ease; color: var(--accent); }
+  .card:hover .arrow { transform: translate(4px, -4px); }
+  .card:hover h3 { color: var(--accent); }
+  .card p { margin: 0.35rem 0 0.6rem; font-size: 0.92rem; }
+  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+  }
+
+  /* reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* load stagger */
+  .stagger { opacity: 0; transform: translateY(18px); animation: rise 0.65s ease forwards; }
+  .stagger:nth-child(2) { animation-delay: 0.08s; }
+  .stagger:nth-child(3) { animation-delay: 0.16s; }
+  .stagger:nth-child(4) { animation-delay: 0.24s; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+
+  .note {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 0.9rem;
+    margin-top: 0.4rem;
+  }
+
+  @media (min-width: 900px) { nav { display: block; } }
+  @media (max-width: 899px) {
+    .wrap { flex-direction: column; gap: 0; }
+    aside, main { width: 100%; position: static; max-height: none; padding: 3.5rem 0 0; }
+    main { padding: 2.5rem 0 4rem; }
+    .side-foot { margin-top: 2rem; padding-top: 0; }
+    .card { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stagger { animation: none; opacity: 1; transform: none; }
+    .reveal { transition: none; opacity: 1; transform: none; }
+    .card, .icon-link, .toggle { transition: none; }
+    html { scroll-behavior: auto; }
+  }
+  .toggle:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+</style>
+
+<div id="spotlight"></div>
+<div class="wrap">
+  <aside>
+    <div class="stagger"><h1 id="t-name">Woongjae Jung</h1></div>
+    <div class="stagger"><p class="tagline" id="t-tag">Ph.D. Bioinformatics Scientist · AI Engineer</p></div>
+    <div class="stagger"><p class="intro" id="t-intro">NGS · Epigenomics · Multiomics — turning raw sequencing data into clinical and research insight.</p></div>
+    <div class="stagger">
+      <nav id="nav">
+        <a href="#about" class="active" data-en="About" data-ko="소개">About</a>
+        <a href="#projects" data-en="Projects" data-ko="프로젝트">Projects</a>
+        <a href="#experience" data-en="Experience" data-ko="경력">Experience</a>
+        <a href="#publications" data-en="Publications" data-ko="논문">Publications</a>
+      </nav>
+    </div>
+    <div class="side-foot">
+      <a class="icon-link" href="https://github.com/wf4006hufman" target="_blank" rel="noopener">GitHub</a>
+      <a class="icon-link" href="mailto:woongjaej@gmail.com">Email</a>
+      <button class="toggle" id="lang-btn" type="button">KO</button>
+      <button class="toggle" id="theme-btn" type="button" aria-label="Toggle theme">LIGHT</button>
+    </div>
+  </aside>
+
+  <main>
+    <section id="about" class="reveal">
+      <h2 class="label" data-en="About" data-ko="소개">About</h2>
+      <div class="about">
+        <p id="t-about">Bioinformatics scientist working at the intersection of next-generation sequencing, epigenomics, multiomics, and AI engineering. I build pipelines and tools that turn raw sequencing data into clinical and research insight.</p>
+        <div class="chips">
+          <span class="chip">NGS</span><span class="chip">Epigenomics</span><span class="chip">Multiomics</span>
+          <span class="chip">Python</span><span class="chip">Machine Learning</span><span class="chip">Google Cloud</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="reveal">
+      <h2 class="label" data-en="Projects" data-ko="프로젝트">Projects</h2>
+      <a class="card" href="https://github.com/wf4006hufman/clinical-genomics-emr-bridge" target="_blank" rel="noopener">
+        <span class="meta">JavaScript<br>★ 0</span>
+        <span>
+          <h3>clinical-genomics-emr-bridge <span class="arrow">↗</span></h3>
+          <p class="proj-desc" data-en="Case study: a clinical genomics report-to-EMR bridge — approval gating, PHI-safe drift detection, adversarial safety review" data-ko="임상 유전체 리포트–EMR 연동 케이스 스터디 — 승인 게이팅, PHI 안전 드리프트 감지, 적대적 안전성 리뷰">Case study: a clinical genomics report-to-EMR bridge — approval gating, PHI-safe drift detection, adversarial safety review</p>
+          <span class="tags"><span class="tag">clinical</span><span class="tag">genomics</span></span>
+        </span>
+      </a>
+      <a class="card" href="https://github.com/wf4006hufman/fieldrag" target="_blank" rel="noopener">
+        <span class="meta">Python<br>★ 0</span>
+        <span>
+          <h3>fieldrag <span class="arrow">↗</span></h3>
+          <p class="proj-desc" data-en="Grounded RAG + agent assistant for NGS field support on Google Cloud (Gemini)" data-ko="NGS 필드 지원을 위한 grounded RAG + 에이전트 어시스턴트 (Google Cloud, Gemini)">Grounded RAG + agent assistant for NGS field support on Google Cloud (Gemini)</p>
+          <span class="tags"><span class="tag">rag</span><span class="tag">gcp</span></span>
+        </span>
+      </a>
+      <a class="card" href="https://github.com/wf4006hufman/bclconvert_ubuntu_version" target="_blank" rel="noopener">
+        <span class="meta">Shell<br>★ 0</span>
+        <span>
+          <h3>bclconvert_ubuntu_version <span class="arrow">↗</span></h3>
+          <p class="proj-desc" data-en="Run Illumina bcl-convert on Ubuntu through an Oracle Linux container wrapper" data-ko="Oracle Linux 컨테이너 래퍼로 Ubuntu에서 Illumina bcl-convert 실행">Run Illumina bcl-convert on Ubuntu through an Oracle Linux container wrapper</p>
+          <span class="tags"><span class="tag">ngs</span><span class="tag">docker</span></span>
+        </span>
+      </a>
+    </section>
+
+    <section id="experience" class="reveal">
+      <h2 class="label" data-en="Experience" data-ko="경력">Experience</h2>
+      <div class="card">
+        <span class="meta">2024 — NOW</span>
+        <span>
+          <h3 data-en="Senior Bioinformatics Scientist" data-ko="수석 생물정보학 연구원">Senior Bioinformatics Scientist</h3>
+          <p data-en="Example Genomics — sample entry to preview the design" data-ko="예시 지노믹스 — 디자인 미리보기용 샘플 항목">Example Genomics — sample entry to preview the design</p>
+        </span>
+      </div>
+      <p class="note">※ 예시 데이터 — 실제 경력·논문 내용은 content.json에 채우면 이 스타일로 표시됩니다</p>
+    </section>
+
+    <section id="publications" class="reveal">
+      <h2 class="label" data-en="Publications" data-ko="논문">Publications</h2>
+      <div class="card">
+        <span class="meta">2025</span>
+        <span>
+          <h3>Multiomic profiling of … <span class="arrow">↗</span></h3>
+          <p>Jung W, et al. · Nature Communications</p>
+        </span>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  const root = document.documentElement;
+  root.dataset.theme = "dark";
+
+  // spotlight follows cursor
+  const spot = document.getElementById("spotlight");
+  addEventListener("pointermove", (e) => {
+    spot.style.setProperty("--mx", e.clientX + "px");
+    spot.style.setProperty("--my", e.clientY + "px");
+  });
+
+  // theme toggle
+  const themeBtn = document.getElementById("theme-btn");
+  themeBtn.addEventListener("click", () => {
+    const dark = root.dataset.theme !== "light";
+    root.dataset.theme = dark ? "light" : "dark";
+    themeBtn.textContent = dark ? "DARK" : "LIGHT";
+  });
+
+  // language toggle (mock: swaps data-en/data-ko marked strings)
+  const langBtn = document.getElementById("lang-btn");
+  let lang = "en";
+  const t = {
+    name: { en: "Woongjae Jung", ko: "정웅재" },
+    tag: { en: "Ph.D. Bioinformatics Scientist · AI Engineer", ko: "생물정보학 박사 · AI 엔지니어" },
+    intro: {
+      en: "NGS · Epigenomics · Multiomics — turning raw sequencing data into clinical and research insight.",
+      ko: "NGS · 후성유전체학 · 멀티오믹스 — 원시 시퀀싱 데이터를 임상·연구 인사이트로.",
+    },
+    about: {
+      en: "Bioinformatics scientist working at the intersection of next-generation sequencing, epigenomics, multiomics, and AI engineering. I build pipelines and tools that turn raw sequencing data into clinical and research insight.",
+      ko: "차세대 시퀀싱(NGS), 후성유전체학, 멀티오믹스, AI 엔지니어링의 교차점에서 일하는 생물정보학 연구자입니다. 원시 시퀀싱 데이터를 임상·연구 인사이트로 바꾸는 파이프라인과 도구를 만듭니다.",
+    },
+  };
+  langBtn.addEventListener("click", () => {
+    lang = lang === "en" ? "ko" : "en";
+    langBtn.textContent = lang === "en" ? "KO" : "EN";
+    for (const key of ["name", "tag", "intro", "about"]) {
+      document.getElementById("t-" + key).textContent = t[key][lang];
+    }
+    document.querySelectorAll("[data-en]").forEach((el) => {
+      el.childNodes[0].textContent = el.dataset[lang];
+    });
+  });
+
+  // scroll reveal
+  const io = new IntersectionObserver(
+    (entries) => entries.forEach((e) => e.isIntersecting && e.target.classList.add("in")),
+    { threshold: 0.15 }
+  );
+  document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+  // scroll spy
+  const links = [...document.querySelectorAll("#nav a")];
+  const spy = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          links.forEach((l) => l.classList.toggle("active", l.getAttribute("href") === "#" + e.target.id));
+        }
+      });
+    },
+    { rootMargin: "-40% 0px -50% 0px" }
+  );
+  document.querySelectorAll("section[id]").forEach((s) => spy.observe(s));
+</script>
