@@ -8,15 +8,14 @@ import {
 } from "../assets/js/logic.mjs";
 
 test("resolveInitialLang: 저장값 우선", () => {
-  assert.equal(resolveInitialLang("ko", "en-US"), "ko");
-  assert.equal(resolveInitialLang("en", "ko-KR"), "en");
+  assert.equal(resolveInitialLang("ko"), "ko");
+  assert.equal(resolveInitialLang("en"), "en");
 });
 
-test("resolveInitialLang: 저장값 없으면 브라우저 언어", () => {
-  assert.equal(resolveInitialLang(null, "ko-KR"), "ko");
-  assert.equal(resolveInitialLang(null, "en-US"), "en");
-  assert.equal(resolveInitialLang(null, ""), "en");
-  assert.equal(resolveInitialLang("garbage", "ja-JP"), "en");
+test("resolveInitialLang: 저장값 없으면 영어가 기본", () => {
+  assert.equal(resolveInitialLang(null), "en");
+  assert.equal(resolveInitialLang(undefined), "en");
+  assert.equal(resolveInitialLang("garbage"), "en");
 });
 
 test("translate: 키 존재 시 해당 언어", () => {

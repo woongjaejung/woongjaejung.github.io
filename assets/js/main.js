@@ -213,7 +213,7 @@ async function init() {
   document
     .getElementById("lang-toggle")
     .addEventListener("click", () => setLang(state.lang === "en" ? "ko" : "en"));
-  setLang(resolveInitialLang(readStoredLang(), navigator.language));
+  setLang(resolveInitialLang(readStoredLang()));
 }
 
 init().catch((err) => {

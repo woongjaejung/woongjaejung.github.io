@@ -1,6 +1,6 @@
-export function resolveInitialLang(stored, navigatorLang) {
+export function resolveInitialLang(stored) {
   if (stored === "en" || stored === "ko") return stored;
-  return (navigatorLang || "").toLowerCase().startsWith("ko") ? "ko" : "en";
+  return "en";
 }
 
 export function translate(i18n, key, lang) {

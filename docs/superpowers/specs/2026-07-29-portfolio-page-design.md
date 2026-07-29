@@ -78,7 +78,7 @@ Experience/Publications/Education의 실제 내용은 사용자가 채운다. �
 ## 페이지 동작
 
 - 상단 고정 네비게이션 + 단일 컬럼 스크롤. 네비게이션에 섹션 앵커와 KO/EN 토글.
-- 언어 초기값: localStorage 저장값 → 없으면 `navigator.language`가 `ko*`면 KO, 아니면 EN. 전환 시 `<html lang>`도 갱신.
+- 언어 초기값: localStorage 저장값 → 없으면 EN(영어 기본, 브라우저 언어 감지 없음). 전환 시 `<html lang>`도 갱신.
 - 프로젝트 카드: 이름, 설명(KO 모드에서 `description_ko` 있으면 그것, 없으면 영어 fallback), 주 언어, topic 태그, GitHub 링크.
 - `repos.json` fetch 실패 시: 프로젝트 섹션에 fallback 문구 + GitHub 프로필 링크 표시.
 
