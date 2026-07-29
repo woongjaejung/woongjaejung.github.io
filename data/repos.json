@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-29T09:59:04.106Z",
+  "updated_at": "2026-07-29T10:36:36.286Z",
   "repos": [
     {
       "name": "ICA_usage_dashboard_showcase",
@@ -9,9 +9,12 @@
         "bioinformatics",
         "dashboard",
         "data-visualization",
+        "fastapi",
         "github-pages",
         "ica",
         "illumina",
+        "pandas",
+        "python",
         "reporting",
         "synthetic-data",
         "usage-analytics"
