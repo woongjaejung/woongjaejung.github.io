@@ -302,6 +302,16 @@ function setLang(lang) {
 }
 
 async function init() {
+  document
+    .getElementById("lang-toggle")
+    .addEventListener("click", () => setLang(state.lang === "en" ? "ko" : "en"));
+  document
+    .getElementById("theme-toggle")
+    .addEventListener("click", () =>
+      setTheme(state.theme === "dark" ? "light" : "dark")
+    );
+  setTheme(resolveInitialTheme(readStoredTheme()));
+
   state.content = await loadJSON("data/content.json");
   try {
     const data = await loadJSON("data/repos.json");
@@ -312,15 +322,6 @@ async function init() {
     state.repos = null;
   }
   document.getElementById("year").textContent = String(new Date().getFullYear());
-  document
-    .getElementById("lang-toggle")
-    .addEventListener("click", () => setLang(state.lang === "en" ? "ko" : "en"));
-  document
-    .getElementById("theme-toggle")
-    .addEventListener("click", () =>
-      setTheme(state.theme === "dark" ? "light" : "dark")
-    );
-  setTheme(resolveInitialTheme(readStoredTheme()));
   setLang(resolveInitialLang(readStoredLang()));
   initMotion();
 }
