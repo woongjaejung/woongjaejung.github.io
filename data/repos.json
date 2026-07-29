@@ -1,11 +1,30 @@
 {
-  "updated_at": "2026-07-28T18:27:38.992Z",
+  "updated_at": "2026-07-29T09:57:57.799Z",
   "repos": [
+    {
+      "name": "ICA_usage_dashboard_showcase",
+      "description": "Synthetic public showcase of an ICA analysis usage dashboard",
+      "language": null,
+      "topics": [],
+      "stars": 0,
+      "pushed_at": "2026-07-29T06:52:30Z",
+      "html_url": "https://github.com/wf4006hufman/ICA_usage_dashboard_showcase"
+    },
     {
       "name": "clinical-genomics-emr-bridge",
       "description": "Case study: a clinical genomics report-to-EMR bridge — approval gating, PHI-safe drift detection, adversarial safety review (sanitized portfolio)",
       "language": "JavaScript",
-      "topics": [],
+      "topics": [
+        "ai-safety",
+        "bioinformatics",
+        "case-study",
+        "clinical-genomics",
+        "drift-detection",
+        "emr",
+        "healthcare",
+        "human-in-the-loop",
+        "phi"
+      ],
       "stars": 0,
       "pushed_at": "2026-07-28T03:29:05Z",
       "html_url": "https://github.com/wf4006hufman/clinical-genomics-emr-bridge"
@@ -14,7 +33,16 @@
       "name": "bclconvert_ubuntu_version",
       "description": "Run Illumina bcl-convert on Ubuntu through an Oracle Linux container wrapper",
       "language": "Shell",
-      "topics": [],
+      "topics": [
+        "bcl-convert",
+        "bioinformatics",
+        "containers",
+        "illumina",
+        "ngs",
+        "oracle-linux",
+        "sequencing",
+        "ubuntu"
+      ],
       "stars": 0,
       "pushed_at": "2026-07-08T16:17:12Z",
       "html_url": "https://github.com/wf4006hufman/bclconvert_ubuntu_version"
