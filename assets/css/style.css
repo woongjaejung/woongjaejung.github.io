@@ -252,7 +252,7 @@ main {
 /* ── entries (experience / education / pubs) ── */
 .entry {
   display: grid;
-  grid-template-columns: 7.5rem 1fr;
+  grid-template-columns: 9.5rem 1fr;
   gap: 0.4rem 1rem;
   padding: 0.7rem 0;
 }
@@ -262,6 +262,8 @@ main {
   color: var(--muted);
   font-size: 0.8rem;
   padding-top: 0.15rem;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 #publication-list { padding-left: 1.2rem; }
