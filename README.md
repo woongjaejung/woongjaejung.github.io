@@ -19,6 +19,7 @@ Personal portfolio — bilingual (EN/KO), auto-synced with my GitHub repos.
 | Add a publication | Append to `publications`: `{ "year": "2025", "title": "…", "venue": "…", "authors": "…", "link": "https://…" }` |
 | Add education | Append to `education`: `{ "period": "…", "degree": {"en", "ko"}, "school": {"en", "ko"} }` |
 | Change bio / skills / contact | `profile`, `skills`, `contact` |
+| Sidebar one-liner (separate from the full About text) | `profile.intro` — `{"en", "ko"}`; falls back to `profile.about` if omitted |
 
 Sections with empty arrays (`experience`, `publications`, `education`) are
 hidden automatically, including their nav links.

@@ -89,7 +89,8 @@ function applyStaticText() {
   document.getElementById("hero-tagline").textContent = pick(profile.tagline, state.lang);
 
   const about = pick(profile.about, state.lang);
-  document.getElementById("about-text").textContent = about.split(". ")[0] + ".";
+  document.getElementById("about-text").textContent =
+    pick(profile.intro, state.lang) || about;
   document.getElementById("about-full").textContent = about;
   applyToggleLabels();
 }
