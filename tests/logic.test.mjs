@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   resolveInitialLang,
+  resolveInitialTheme,
   translate,
   repoDescription,
   pick,
@@ -51,4 +52,16 @@ test("pick: 문자열/이중언어/null 처리", () => {
   assert.equal(pick({ en: "Univ", ko: "대학교" }, "ko"), "대학교");
   assert.equal(pick({ en: "Univ" }, "ko"), "Univ");
   assert.equal(pick(null, "en"), "");
+});
+
+test("resolveInitialTheme: 저장값이 유효하면 그대로", () => {
+  assert.equal(resolveInitialTheme("dark"), "dark");
+  assert.equal(resolveInitialTheme("light"), "light");
+});
+
+test("resolveInitialTheme: 저장값이 없거나 이상하면 다크가 기본", () => {
+  assert.equal(resolveInitialTheme(null), "dark");
+  assert.equal(resolveInitialTheme(undefined), "dark");
+  assert.equal(resolveInitialTheme("garbage"), "dark");
+  assert.equal(resolveInitialTheme(""), "dark");
 });

@@ -26,3 +26,8 @@ export function pick(field, lang) {
   if (typeof field === "string") return field;
   return field[lang] ?? field.en ?? field.ko ?? "";
 }
+
+export function resolveInitialTheme(stored) {
+  if (stored === "dark" || stored === "light") return stored;
+  return "dark";
+}
