@@ -1,6 +1,51 @@
 {
-  "updated_at": "2026-07-29T10:36:36.286Z",
+  "updated_at": "2026-07-29T15:55:00.541Z",
   "repos": [
+    {
+      "name": "ICA_CSV_Batch_Runner_showcase",
+      "description": "Synthetic story-led showcase of a preflight-safe ICA CSV batch runner",
+      "language": "Python",
+      "topics": [
+        "bioinformatics",
+        "github-pages",
+        "ica",
+        "illumina",
+        "synthetic-data",
+        "workflow-automation"
+      ],
+      "stars": 0,
+      "pushed_at": "2026-07-29T15:33:44Z",
+      "html_url": "https://github.com/wf4006hufman/ICA_CSV_Batch_Runner_showcase"
+    },
+    {
+      "name": "dragen-cnv-plot-builder-showcase",
+      "description": "Public showcase of an exon-level CNV review aid for DRAGEN output: one interactive HTML plot so a reviewer can judge whether a copy-number call is a true CNV or a capture artifact. Synthetic demo, no patient data.",
+      "language": "Python",
+      "topics": [
+        "bioinformatics",
+        "clinical-genomics",
+        "cnv",
+        "copy-number-variation",
+        "data-visualization",
+        "dragen",
+        "electron",
+        "exome-sequencing",
+        "genomics",
+        "github-pages",
+        "hg38",
+        "illumina",
+        "interactive-visualization",
+        "molecular-diagnostics",
+        "ngs",
+        "plotly",
+        "python",
+        "synthetic-data",
+        "variant-review"
+      ],
+      "stars": 0,
+      "pushed_at": "2026-07-29T12:38:57Z",
+      "html_url": "https://github.com/wf4006hufman/dragen-cnv-plot-builder-showcase"
+    },
     {
       "name": "ICA_usage_dashboard_showcase",
       "description": "Synthetic public showcase of an ICA analysis usage dashboard",
