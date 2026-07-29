@@ -1,11 +1,21 @@
 {
-  "updated_at": "2026-07-29T09:57:57.799Z",
+  "updated_at": "2026-07-29T09:59:04.106Z",
   "repos": [
     {
       "name": "ICA_usage_dashboard_showcase",
       "description": "Synthetic public showcase of an ICA analysis usage dashboard",
       "language": null,
-      "topics": [],
+      "topics": [
+        "bioinformatics",
+        "dashboard",
+        "data-visualization",
+        "github-pages",
+        "ica",
+        "illumina",
+        "reporting",
+        "synthetic-data",
+        "usage-analytics"
+      ],
       "stars": 0,
       "pushed_at": "2026-07-29T06:52:30Z",
       "html_url": "https://github.com/wf4006hufman/ICA_usage_dashboard_showcase"
