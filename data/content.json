@@ -47,9 +47,118 @@
     },
     "footer_updated": { "en": "Projects updated", "ko": "프로젝트 갱신" }
   },
-  "experience": [],
-  "publications": [],
-  "education": [],
+  "experience": [
+    {
+      "period": "2022.09 – Present",
+      "title": {
+        "en": "Senior Field Bioinformatics Support Scientist",
+        "ko": "시니어 필드 생물정보학 지원 과학자"
+      },
+      "org": { "en": "Illumina Korea", "ko": "일루미나 코리아" },
+      "summary": {
+        "en": "Primary technical liaison between Korean enterprise customers and Illumina HQ, owning complex issues end-to-end across DRAGEN, Illumina Cloud platforms, customer infrastructure, and NGS pipelines. Awarded 2024 MVP — Asia Middle East Region.",
+        "ko": "국내 엔터프라이즈 고객과 일루미나 본사를 잇는 기술 창구로서 DRAGEN, 일루미나 클라우드 플랫폼, 고객 인프라, NGS 파이프라인 전반의 복합 이슈를 처음부터 끝까지 담당. 2024년 아시아·중동 지역 MVP 수상."
+      }
+    },
+    {
+      "period": "2017.02 – 2022.08",
+      "title": {
+        "en": "Master Researcher & Bioinformatics Team Lead",
+        "ko": "책임연구원 · 생물정보학 팀 리드"
+      },
+      "org": {
+        "en": "Lab of Epigenetics & Molecular Science, Yonsei University College of Medicine",
+        "ko": "연세대학교 의과대학 후성유전학·분자과학 연구실"
+      },
+      "summary": {
+        "en": "Led a technical team building automated pipelines in Python, R, and Bash for large-scale genomic and epigenomic data, and managed the lab's Linux servers and shared computational infrastructure.",
+        "ko": "대규모 유전체·후성유전체 데이터 처리를 위한 Python·R·Bash 자동화 파이프라인을 개발하는 기술 팀을 이끌고, 연구실의 리눅스 서버와 공용 전산 인프라를 운영."
+      }
+    },
+    {
+      "period": "2015.03 – 2017.02",
+      "title": { "en": "Bioinformatics Researcher", "ko": "생물정보학 연구원" },
+      "org": {
+        "en": "Lab of Post-genomics Bioinformatics, Soongsil University",
+        "ko": "숭실대학교 포스트지노믹스 생물정보학 연구실"
+      },
+      "summary": {
+        "en": "Developed and maintained custom software and pipelines for large-scale genomic datasets, optimizing storage and processing for performance and reproducibility.",
+        "ko": "대규모 유전체 데이터셋을 위한 자체 소프트웨어와 파이프라인을 개발·유지하고, 성능과 재현성을 위해 저장·처리 전략을 최적화."
+      }
+    },
+    {
+      "period": "2012.02 – 2015.02",
+      "title": { "en": "Research Assistant — Immunology", "ko": "연구조교 — 면역학" },
+      "org": {
+        "en": "Lab of Immunology, Soongsil University",
+        "ko": "숭실대학교 면역학 연구실"
+      },
+      "summary": {
+        "en": "Conducted immunology research and supported experimental data analysis during graduate training.",
+        "ko": "대학원 과정 중 면역학 연구를 수행하고 실험 데이터 분석을 지원."
+      }
+    }
+  ],
+  "publications": [
+    {
+      "year": "2023",
+      "title": "Vorinostat-induced acetylation of RUNX3 reshapes transcriptional profile through long-range enhancer-promoter interactions in natural killer cells",
+      "venue": "BMB Reports",
+      "authors": "Co-author",
+      "link": "https://doi.org/10.5483/BMBRep.2023-0044"
+    },
+    {
+      "year": "2021",
+      "title": "CTCF-mediated chromatin looping provides a topological framework for the formation of phase-separated transcriptional condensates",
+      "venue": "Nucleic Acids Research",
+      "authors": "Co-author",
+      "link": "https://doi.org/10.1093/nar/gkab1242"
+    },
+    {
+      "year": "2021",
+      "title": "Liver-Specific Deletion of Mouse CTCF Leads to Hepatic Steatosis via Augmented PPARγ Signaling",
+      "venue": "Cellular and Molecular Gastroenterology and Hepatology",
+      "authors": "First author",
+      "link": "https://doi.org/10.1016/j.jcmgh.2021.07.016"
+    },
+    {
+      "year": "2021",
+      "title": "p53 expression confers sensitivity to 5-fluorouracil via distinct chromatin accessibility dynamics in human colorectal cancer",
+      "venue": "Oncology Letters",
+      "authors": "Co-author",
+      "link": "https://doi.org/10.3892/ol.2021.12487"
+    }
+  ],
+  "education": [
+    {
+      "period": "2022.08",
+      "degree": {
+        "en": "Ph.D. in Bioinformatics & Epigenomics",
+        "ko": "생물정보학·후성유전체학 박사"
+      },
+      "school": {
+        "en": "Soongsil University, Seoul, Korea",
+        "ko": "숭실대학교, 서울"
+      }
+    },
+    {
+      "period": "2015.02",
+      "degree": { "en": "M.S. in Immunology", "ko": "면역학 석사" },
+      "school": {
+        "en": "Soongsil University, Seoul, Korea",
+        "ko": "숭실대학교, 서울"
+      }
+    },
+    {
+      "period": "2013.02",
+      "degree": { "en": "B.S. in Bioinformatics", "ko": "생물정보학 학사" },
+      "school": {
+        "en": "Soongsil University, Seoul, Korea",
+        "ko": "숭실대학교, 서울"
+      }
+    }
+  ],
   "contact": {
     "email": "woongjaej@gmail.com",
     "links": [
