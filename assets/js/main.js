@@ -1,11 +1,12 @@
 import {
   resolveInitialLang,
+  resolveInitialTheme,
   translate,
   repoDescription,
   pick,
 } from "./logic.mjs";
 
-const state = { lang: "en", content: null, repos: null, updatedAt: null };
+const state = { lang: "en", theme: "dark", content: null, repos: null, updatedAt: null };
 
 async function loadJSON(path) {
   const res = await fetch(path);
@@ -29,11 +30,52 @@ function storeLang(lang) {
   }
 }
 
+function readStoredTheme() {
+  try {
+    return localStorage.getItem("theme");
+  } catch {
+    return null;
+  }
+}
+
+function storeTheme(theme) {
+  try {
+    localStorage.setItem("theme", theme);
+  } catch {
+    // storage blocked — theme just won't persist
+  }
+}
+
+function setTheme(theme) {
+  state.theme = theme;
+  storeTheme(theme);
+  document.documentElement.dataset.theme = theme;
+  applyToggleLabels();
+}
+
 function el(tag, className, text) {
   const node = document.createElement(tag);
   if (className) node.className = className;
   if (text != null) node.textContent = text;
   return node;
+}
+
+function applyToggleLabels() {
+  const ko = state.lang === "ko";
+
+  const langToggle = document.getElementById("lang-toggle");
+  langToggle.textContent = ko ? "EN" : "KO";
+  langToggle.setAttribute("aria-label", ko ? "영어로 전환" : "Switch to Korean");
+
+  const themeToggle = document.getElementById("theme-toggle");
+  const toLight = state.theme === "dark";
+  themeToggle.textContent = toLight ? "LIGHT" : "DARK";
+  themeToggle.setAttribute(
+    "aria-label",
+    toLight
+      ? ko ? "밝은 테마로 전환" : "Switch to light theme"
+      : ko ? "어두운 테마로 전환" : "Switch to dark theme"
+  );
 }
 
 function applyStaticText() {
@@ -43,19 +85,13 @@ function applyStaticText() {
   });
   document.documentElement.lang = state.lang;
 
-  const langToggle = document.getElementById("lang-toggle");
-  langToggle.textContent = state.lang === "en" ? "KO" : "EN";
-  langToggle.setAttribute(
-    "aria-label",
-    state.lang === "en" ? "Switch to Korean" : "영어로 전환"
-  );
-
   document.getElementById("hero-name").textContent = profile.name;
   document.getElementById("hero-tagline").textContent = pick(profile.tagline, state.lang);
 
   const about = pick(profile.about, state.lang);
   document.getElementById("about-text").textContent = about.split(". ")[0] + ".";
   document.getElementById("about-full").textContent = about;
+  applyToggleLabels();
 }
 
 function renderSkills() {
@@ -224,6 +260,12 @@ async function init() {
   document
     .getElementById("lang-toggle")
     .addEventListener("click", () => setLang(state.lang === "en" ? "ko" : "en"));
+  document
+    .getElementById("theme-toggle")
+    .addEventListener("click", () =>
+      setTheme(state.theme === "dark" ? "light" : "dark")
+    );
+  setTheme(resolveInitialTheme(readStoredTheme()));
   setLang(resolveInitialLang(readStoredLang()));
 }
 
