@@ -37,28 +37,25 @@ function el(tag, className, text) {
 }
 
 function applyStaticText() {
-  const { i18n } = state.content;
+  const { i18n, profile } = state.content;
   document.querySelectorAll("[data-i18n]").forEach((node) => {
     node.textContent = translate(i18n, node.dataset.i18n, state.lang);
   });
   document.documentElement.lang = state.lang;
-  const toggle = document.getElementById("lang-toggle");
-  toggle.textContent = state.lang === "en" ? "KO" : "EN";
-  toggle.setAttribute(
+
+  const langToggle = document.getElementById("lang-toggle");
+  langToggle.textContent = state.lang === "en" ? "KO" : "EN";
+  langToggle.setAttribute(
     "aria-label",
     state.lang === "en" ? "Switch to Korean" : "영어로 전환"
   );
 
-  const { profile } = state.content;
   document.getElementById("hero-name").textContent = profile.name;
-  document.getElementById("hero-tagline").textContent = pick(
-    profile.tagline,
-    state.lang
-  );
-  document.getElementById("about-text").textContent = pick(
-    profile.about,
-    state.lang
-  );
+  document.getElementById("hero-tagline").textContent = pick(profile.tagline, state.lang);
+
+  const about = pick(profile.about, state.lang);
+  document.getElementById("about-text").textContent = about.split(". ")[0] + ".";
+  document.getElementById("about-full").textContent = about;
 }
 
 function renderSkills() {
@@ -68,13 +65,31 @@ function renderSkills() {
   );
 }
 
+function makeEntry(metaText, buildBody, href) {
+  const entry = el(href ? "a" : "div", href ? "card" : "entry");
+  if (href) {
+    entry.href = href;
+    entry.target = "_blank";
+    entry.rel = "noopener";
+  }
+  entry.appendChild(el("span", "entry-meta", metaText));
+  const body = el("div", "entry-body");
+  buildBody(body);
+  entry.appendChild(body);
+  return entry;
+}
+
 function renderProjects() {
   const grid = document.getElementById("project-grid");
   const updated = document.getElementById("projects-updated");
   const { i18n, repo_overrides } = state.content;
 
   if (!state.repos) {
-    const fallback = el("p", "muted", translate(i18n, "projects_fallback", state.lang) + " ");
+    const fallback = el(
+      "p",
+      "muted small",
+      translate(i18n, "projects_fallback", state.lang) + " "
+    );
     const link = el("a", null, "github.com/wf4006hufman");
     link.href = "https://github.com/wf4006hufman";
     link.target = "_blank";
@@ -87,27 +102,26 @@ function renderProjects() {
 
   grid.replaceChildren(
     ...state.repos.map((repo) => {
-      const card = el("article", "card");
-      const title = el("h3");
-      const link = el("a", null, repo.name);
-      link.href = repo.html_url;
-      link.target = "_blank";
-      link.rel = "noopener";
-      title.appendChild(link);
-      card.appendChild(title);
-      card.appendChild(
-        el("p", null, repoDescription(repo, repo_overrides, state.lang))
+      const meta = [repo.language, repo.stars > 0 ? `★ ${repo.stars}` : null]
+        .filter(Boolean)
+        .join("\n");
+      return makeEntry(
+        meta,
+        (body) => {
+          const h3 = el("h3", null, repo.name);
+          h3.appendChild(el("span", "arrow", "↗"));
+          body.appendChild(h3);
+          body.appendChild(
+            el("p", null, repoDescription(repo, repo_overrides, state.lang))
+          );
+          if (repo.topics.length) {
+            const tags = el("div", "chip-row");
+            repo.topics.forEach((t) => tags.appendChild(el("span", "tag", t)));
+            body.appendChild(tags);
+          }
+        },
+        repo.html_url
       );
-      const meta = el("div", "card-meta");
-      if (repo.language) meta.appendChild(el("span", "lang-dot", repo.language));
-      if (repo.stars > 0) meta.appendChild(el("span", null, `★ ${repo.stars}`));
-      card.appendChild(meta);
-      if (repo.topics.length) {
-        const tags = el("div", "chip-row");
-        repo.topics.forEach((t) => tags.appendChild(el("span", "tag", t)));
-        card.appendChild(tags);
-      }
-      return card;
     })
   );
 
@@ -129,60 +143,57 @@ function renderEntrySection(sectionId, listId, items, build) {
 function renderLists() {
   const lang = state.lang;
 
-  renderEntrySection("experience", "experience-list", state.content.experience, (x) => {
-    const entry = el("div", "entry");
-    entry.appendChild(el("span", "entry-period", x.period));
-    const body = el("div");
-    body.appendChild(el("strong", null, pick(x.title, lang)));
-    body.appendChild(el("div", "muted", pick(x.org, lang)));
-    if (x.summary) body.appendChild(el("p", "small", pick(x.summary, lang)));
-    entry.appendChild(body);
-    return entry;
-  });
+  renderEntrySection("experience", "experience-list", state.content.experience, (x) =>
+    makeEntry(x.period, (body) => {
+      body.appendChild(el("strong", null, pick(x.title, lang)));
+      body.appendChild(el("p", "org", pick(x.org, lang)));
+      if (x.summary) body.appendChild(el("p", null, pick(x.summary, lang)));
+    })
+  );
 
-  renderEntrySection("publications", "publication-list", state.content.publications, (p) => {
-    const li = el("li", "entry");
-    if (p.link) {
-      const a = el("a", null, p.title);
-      a.href = p.link;
-      a.target = "_blank";
-      a.rel = "noopener";
-      li.appendChild(a);
-    } else {
-      li.appendChild(el("span", null, p.title));
-    }
-    li.appendChild(el("div", "muted small", [p.authors, p.venue, p.year].filter(Boolean).join(" · ")));
-    return li;
-  });
+  renderEntrySection("publications", "publication-list", state.content.publications, (p) =>
+    makeEntry(
+      p.year,
+      (body) => {
+        const h3 = el("h3", null, p.title);
+        if (p.link) h3.appendChild(el("span", "arrow", "↗"));
+        body.appendChild(h3);
+        body.appendChild(
+          el("p", "org", [p.authors, p.venue].filter(Boolean).join(" · "))
+        );
+      },
+      p.link || null
+    )
+  );
 
-  renderEntrySection("education", "education-list", state.content.education, (e) => {
-    const entry = el("div", "entry");
-    entry.appendChild(el("span", "entry-period", e.period));
-    const body = el("div");
-    body.appendChild(el("strong", null, pick(e.degree, lang)));
-    body.appendChild(el("div", "muted", pick(e.school, lang)));
-    entry.appendChild(body);
-    return entry;
-  });
+  renderEntrySection("education", "education-list", state.content.education, (e) =>
+    makeEntry(e.period, (body) => {
+      body.appendChild(el("strong", null, pick(e.degree, lang)));
+      body.appendChild(el("p", "org", pick(e.school, lang)));
+    })
+  );
 }
 
 function renderContact() {
-  const wrap = document.getElementById("contact-links");
   const { contact } = state.content;
-  const nodes = [];
-  if (contact.email) {
-    const a = el("a", "contact-link", contact.email);
-    a.href = `mailto:${contact.email}`;
-    nodes.push(a);
-  }
-  contact.links.forEach((l) => {
-    const a = el("a", "contact-link", l.label);
-    a.href = l.url;
-    a.target = "_blank";
-    a.rel = "noopener";
-    nodes.push(a);
-  });
-  wrap.replaceChildren(...nodes);
+  const build = () => {
+    const nodes = [];
+    if (contact.email) {
+      const a = el("a", "contact-link", contact.email);
+      a.href = `mailto:${contact.email}`;
+      nodes.push(a);
+    }
+    contact.links.forEach((l) => {
+      const a = el("a", "contact-link", l.label);
+      a.href = l.url;
+      a.target = "_blank";
+      a.rel = "noopener";
+      nodes.push(a);
+    });
+    return nodes;
+  };
+  document.getElementById("contact-links").replaceChildren(...build());
+  document.getElementById("contact-links-main").replaceChildren(...build());
 }
 
 function renderAll() {
