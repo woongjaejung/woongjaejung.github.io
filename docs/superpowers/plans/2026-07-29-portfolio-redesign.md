@@ -580,8 +580,8 @@ function renderProjects() {
       "muted small",
       translate(i18n, "projects_fallback", state.lang) + " "
     );
-    const link = el("a", null, "github.com/wf4006hufman");
-    link.href = "https://github.com/wf4006hufman";
+    const link = el("a", null, "github.com/woongjaejung");
+    link.href = "https://github.com/woongjaejung";
     link.target = "_blank";
     link.rel = "noopener";
     fallback.appendChild(link);
@@ -988,7 +988,7 @@ git commit -m "feat: add load, scroll, and pointer motion"
 
 **Interfaces:**
 - Consumes: Task 1–4의 결과물 전체.
-- Produces: 라이브 사이트 `https://wf4006hufman.github.io`에 반영된 리디자인.
+- Produces: 라이브 사이트 `https://woongjaejung.github.io`에 반영된 리디자인.
 
 - [ ] **Step 1: 최종 로컬 점검**
 
@@ -1030,11 +1030,11 @@ git push origin main
 
 ```bash
 for i in $(seq 1 24); do
-  if curl -s https://wf4006hufman.github.io/assets/css/style.css | grep -q "data-theme"; then break; fi
+  if curl -s https://woongjaejung.github.io/assets/css/style.css | grep -q "data-theme"; then break; fi
   sleep 10
 done
-curl -s -o /dev/null -w 'page: %{http_code}\n' https://wf4006hufman.github.io/
-curl -sI https://wf4006hufman.github.io/assets/js/logic.mjs | grep -i content-type
+curl -s -o /dev/null -w 'page: %{http_code}\n' https://woongjaejung.github.io/
+curl -sI https://woongjaejung.github.io/assets/js/logic.mjs | grep -i content-type
 ```
 
 Expected: `page: 200`, JavaScript MIME 타입, style.css에 `data-theme` 포함

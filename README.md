@@ -1,4 +1,4 @@
-# wf4006hufman.github.io
+# woongjaejung.github.io
 
 Personal portfolio — bilingual (EN/KO), auto-synced with my GitHub repos.
 

@@ -127,8 +127,8 @@ function renderProjects() {
       "muted small",
       translate(i18n, "projects_fallback", state.lang) + " "
     );
-    const link = el("a", null, "github.com/wf4006hufman");
-    link.href = "https://github.com/wf4006hufman";
+    const link = el("a", null, "github.com/woongjaejung");
+    link.href = "https://github.com/woongjaejung";
     link.target = "_blank";
     link.rel = "noopener";
     fallback.appendChild(link);

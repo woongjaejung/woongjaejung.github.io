@@ -8,13 +8,13 @@
 Woongjae (Jae) Jung의 개인 포트폴리오 페이지.
 - 참고 사이트 https://swhan0329.github.io/ 의 **정보 구조와 미니멀한 느낌**을 따르되, 비주얼은 복제하지 않고 더 세련되고 차분한 최신 스타일로 재해석한다.
 - 한국어/영어 전환 지원.
-- GitHub 계정 `wf4006hufman`에 공개 repo가 추가되면 **자동으로 페이지에 반영**되는 체계를 갖춘다.
+- GitHub 계정 `woongjaejung`에 공개 repo가 추가되면 **자동으로 페이지에 반영**되는 체계를 갖춘다.
 
 ## 확정된 결정 사항
 
 | 항목 | 결정 |
 |---|---|
-| 배포 | GitHub Pages 사용자 사이트 `wf4006hufman.github.io` (main 브랜치 루트, "Deploy from branch") |
+| 배포 | GitHub Pages 사용자 사이트 `woongjaejung.github.io` (main 브랜치 루트, "Deploy from branch") |
 | 기술 스택 | 순수 정적 사이트 — HTML/CSS/vanilla JS, 프레임워크·빌드 도구 없음 |
 | 섹션 | About(+Skills) → Projects(자동) → Experience → Publications → Education → Contact |
 | 자동 업데이트 | GitHub Actions 하루 1회 cron + workflow_dispatch |
@@ -51,7 +51,7 @@ docs/superpowers/specs/            # 이 문서
       "topics": ["rag", "gcp"],
       "stars": 0,
       "pushed_at": "2026-07-05T…",
-      "html_url": "https://github.com/wf4006hufman/fieldrag"
+      "html_url": "https://github.com/woongjaejung/fieldrag"
     }
   ]
 }
@@ -86,9 +86,9 @@ Experience/Publications/Education의 실제 내용은 사용자가 채운다. �
 
 `update-repos.yml`:
 1. 트리거: cron 하루 1회 (`0 0 * * *`, 00:00 UTC = KST 09:00) + workflow_dispatch.
-2. `scripts/fetch-repos.mjs` 실행 — Actions 내장 `GITHUB_TOKEN`으로 `GET /users/wf4006hufman/repos` 호출, fork와 `exclude_repos` 제외, 필드 추려 `data/repos.json` 생성.
+2. `scripts/fetch-repos.mjs` 실행 — Actions 내장 `GITHUB_TOKEN`으로 `GET /users/woongjaejung/repos` 호출, fork와 `exclude_repos` 제외, 필드 추려 `data/repos.json` 생성.
 3. **안전장치**: 결과가 repo 0개이거나 JSON 파싱 불가면 커밋하지 않고 워크플로우 실패 → 페이지는 마지막 정상 데이터 유지.
-4. diff가 있을 때만 커밋·푸시. 커밋 author/committer는 사용자 identity(`wf4006hufman` <woongjaej2@gmail.com>) — bot이 contributor로 잡히지 않게 한다. AI 서명/Co-Authored-By 트레일러 금지.
+4. diff가 있을 때만 커밋·푸시. 커밋 author/committer는 사용자 identity(`woongjaejung` <woongjaej2@gmail.com>) — bot이 contributor로 잡히지 않게 한다. AI 서명/Co-Authored-By 트레일러 금지.
 
 새 repo 반영 시점: 다음 cron(최대 24h) 또는 Actions 탭 수동 실행 즉시.
 

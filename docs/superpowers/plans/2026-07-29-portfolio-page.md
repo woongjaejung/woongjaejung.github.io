@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** `wf4006hufman.github.io`에 배포되는 한/영 전환 가능한 정적 포트폴리오 페이지 + GitHub Actions 기반 repo 자동 반영 파이프라인.
+**Goal:** `woongjaejung.github.io`에 배포되는 한/영 전환 가능한 정적 포트폴리오 페이지 + GitHub Actions 기반 repo 자동 반영 파이프라인.
 
 **Architecture:** 프레임워크 없는 정적 사이트. 자동 데이터(`data/repos.json`, Actions가 갱신)와 수동 데이터(`data/content.json`, 사용자 편집)를 파일로 격리한다. 브라우저 JS는 두 JSON을 fetch해 렌더링하며, 순수 로직은 `assets/js/logic.mjs`·`scripts/transform.mjs`로 분리해 `node --test`로 테스트한다.
 
@@ -65,7 +65,7 @@ const apiRepo = (over = {}) => ({
   topics: ["rag"],
   stargazers_count: 3,
   pushed_at: "2026-07-05T00:00:00Z",
-  html_url: "https://github.com/wf4006hufman/fieldrag",
+  html_url: "https://github.com/woongjaejung/fieldrag",
   fork: false,
   extra_api_field: "must be dropped",
   ...over,
@@ -92,7 +92,7 @@ test("허용된 필드만 추출한다", () => {
     topics: ["rag"],
     stars: 3,
     pushed_at: "2026-07-05T00:00:00Z",
-    html_url: "https://github.com/wf4006hufman/fieldrag",
+    html_url: "https://github.com/woongjaejung/fieldrag",
   });
 });
 
@@ -198,7 +198,7 @@ CLI는 네트워크·파일IO만 담당하는 얇은 층이므로 단위 테스�
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { transformRepos, assertValidRepos } from "./transform.mjs";
 
-const USER = "wf4006hufman";
+const USER = "woongjaejung";
 const OUT = new URL("../data/repos.json", import.meta.url);
 const CONTENT = new URL("../data/content.json", import.meta.url);
 
@@ -324,7 +324,7 @@ git commit -m "feat: add fetch-repos CLI"
   "contact": {
     "email": "woongjaej2@gmail.com",
     "links": [
-      { "label": "GitHub", "url": "https://github.com/wf4006hufman" }
+      { "label": "GitHub", "url": "https://github.com/woongjaejung" }
     ]
   }
 }
@@ -343,7 +343,7 @@ Expected: `wrote 3 repos to data/repos.json` — webflyx 제외, `clinical-genom
 - [ ] **Step 4: `README.md` 작성**
 
 ````markdown
-# wf4006hufman.github.io
+# woongjaejung.github.io
 
 Personal portfolio — bilingual (EN/KO), auto-synced with my GitHub repos.
 
@@ -674,8 +674,8 @@ function renderProjects() {
 
   if (!state.repos) {
     const fallback = el("p", "muted", translate(i18n, "projects_fallback", state.lang) + " ");
-    const link = el("a", null, "github.com/wf4006hufman");
-    link.href = "https://github.com/wf4006hufman";
+    const link = el("a", null, "github.com/woongjaejung");
+    link.href = "https://github.com/woongjaejung";
     fallback.appendChild(link);
     grid.replaceChildren(fallback);
     updated.textContent = "";
@@ -1175,8 +1175,8 @@ git commit -m "feat: add daily repo data update workflow"
 **Files:** 없음 (인프라 작업)
 
 **Interfaces:**
-- Consumes: 전체 태스크 결과물. `gh` CLI 인증 (`wf4006hufman`, `repo`+`workflow` 스코프 확인됨).
-- Produces: 라이브 페이지 `https://wf4006hufman.github.io`, 동작하는 자동 업데이트 워크플로우.
+- Consumes: 전체 태스크 결과물. `gh` CLI 인증 (`woongjaejung`, `repo`+`workflow` 스코프 확인됨).
+- Produces: 라이브 페이지 `https://woongjaejung.github.io`, 동작하는 자동 업데이트 워크플로우.
 
 - [ ] **Step 1: 최종 점검**
 
@@ -1189,7 +1189,7 @@ git status --porcelain                   # 클린 확인
 - [ ] **Step 2: GitHub repo 생성 + push**
 
 ```bash
-gh repo create wf4006hufman/wf4006hufman.github.io --public \
+gh repo create woongjaejung/woongjaejung.github.io --public \
   --description "Personal portfolio — bilingual, auto-synced with GitHub" \
   --source . --push
 ```
@@ -1199,9 +1199,9 @@ Expected: repo 생성 및 main push 성공
 - [ ] **Step 3: GitHub Pages 활성화 (main 브랜치 루트)**
 
 ```bash
-gh api -X POST repos/wf4006hufman/wf4006hufman.github.io/pages \
+gh api -X POST repos/woongjaejung/woongjaejung.github.io/pages \
   -f "source[branch]=main" -f "source[path]=/" || \
-gh api -X PUT repos/wf4006hufman/wf4006hufman.github.io/pages \
+gh api -X PUT repos/woongjaejung/woongjaejung.github.io/pages \
   -f "source[branch]=main" -f "source[path]=/"
 ```
 
@@ -1211,12 +1211,12 @@ Expected: 201 (또는 이미 활성화돼 있으면 PUT 성공)
 
 ```bash
 for i in $(seq 1 30); do
-  code=$(curl -s -o /dev/null -w '%{http_code}' https://wf4006hufman.github.io/)
+  code=$(curl -s -o /dev/null -w '%{http_code}' https://woongjaejung.github.io/)
   [ "$code" = "200" ] && break
   sleep 20
 done
 echo "status: $code"
-curl -s https://wf4006hufman.github.io/data/repos.json | head -5
+curl -s https://woongjaejung.github.io/data/repos.json | head -5
 ```
 
 Expected: `status: 200`, repos.json 정상 응답
@@ -1224,22 +1224,22 @@ Expected: `status: 200`, repos.json 정상 응답
 - [ ] **Step 5: 워크플로우 수동 실행으로 파이프라인 검증**
 
 ```bash
-gh workflow run update-repos.yml -R wf4006hufman/wf4006hufman.github.io
+gh workflow run update-repos.yml -R woongjaejung/woongjaejung.github.io
 sleep 30
-gh run list -R wf4006hufman/wf4006hufman.github.io --workflow=update-repos.yml --limit 1
+gh run list -R woongjaejung/woongjaejung.github.io --workflow=update-repos.yml --limit 1
 ```
 
 Expected: 최신 run이 `completed success`. 데이터 변경이 없으므로 "No changes." 로그 (`gh run view --log`로 확인 가능).
 
 - [ ] **Step 6: 실페이지 기능 검증**
 
-브라우저(또는 browse 도구)에서 `https://wf4006hufman.github.io`:
+브라우저(또는 browse 도구)에서 `https://woongjaejung.github.io`:
 - 프로젝트 카드 3개 (webflyx 없음)
 - KO 토글 → 한국어 전환, repo 한국어 설명 표시, 새로고침 후 언어 유지
 - Experience/Publications/Education 섹션·네비 링크 비노출 (데이터 비어 있으므로)
 - 모바일 뷰 정상
 
-브라우저가 불가하면 최소: `curl -s https://wf4006hufman.github.io/ | grep -o 'lang-toggle'` → 출력 확인
+브라우저가 불가하면 최소: `curl -s https://woongjaejung.github.io/ | grep -o 'lang-toggle'` → 출력 확인
 
 - [ ] **Step 7: 완료 커밋 없음 — 로컬과 원격 동기화만 확인**
 

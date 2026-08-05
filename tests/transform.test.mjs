@@ -9,7 +9,7 @@ const apiRepo = (over = {}) => ({
   topics: ["rag"],
   stargazers_count: 3,
   pushed_at: "2026-07-05T00:00:00Z",
-  html_url: "https://github.com/wf4006hufman/fieldrag",
+  html_url: "https://github.com/woongjaejung/fieldrag",
   fork: false,
   extra_api_field: "must be dropped",
   ...over,
@@ -36,7 +36,7 @@ test("허용된 필드만 추출한다", () => {
     topics: ["rag"],
     stars: 3,
     pushed_at: "2026-07-05T00:00:00Z",
-    html_url: "https://github.com/wf4006hufman/fieldrag",
+    html_url: "https://github.com/woongjaejung/fieldrag",
   });
 });
 

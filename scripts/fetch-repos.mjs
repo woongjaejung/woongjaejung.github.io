@@ -1,7 +1,7 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { transformRepos, assertValidRepos } from "./transform.mjs";
 
-const USER = "wf4006hufman";
+const USER = "woongjaejung";
 const OUT = new URL("../data/repos.json", import.meta.url);
 const CONTENT = new URL("../data/content.json", import.meta.url);
 
