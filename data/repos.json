@@ -1,6 +1,24 @@
 {
-  "updated_at": "2026-08-05T01:02:14.494Z",
+  "updated_at": "2026-08-07T18:08:56.641Z",
   "repos": [
+    {
+      "name": "tailterm",
+      "description": "Your always-on tmux session as a phone app, over your tailnet — ttyd + Tailscale serve + a static PWA shell. No public ports.",
+      "language": "HTML",
+      "topics": [
+        "ios",
+        "pwa",
+        "self-hosted",
+        "tailscale",
+        "terminal",
+        "tmux",
+        "ttyd",
+        "web-terminal"
+      ],
+      "stars": 0,
+      "pushed_at": "2026-08-07T17:57:51Z",
+      "html_url": "https://github.com/woongjaejung/tailterm"
+    },
     {
       "name": "ICA_CSV_Batch_Runner_showcase",
       "description": "Synthetic story-led showcase of a preflight-safe ICA CSV batch runner",
