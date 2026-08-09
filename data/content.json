@@ -15,7 +15,7 @@
     }
   },
   "skills": ["Genomics", "NGS", "Epigenomics", "Multiomics", "Python", "Machine Learning", "LLM", "GenAI", "GCP", "AWS", "Pipeline Engineering"],
-  "exclude_repos": ["woongjaejung.github.io"],
+  "exclude_repos": ["woongjaejung.github.io", "woongjaejung", "fieldrag"],
   "repo_overrides": {
     "clinical-genomics-emr-bridge": {
       "description_ko": "임상 유전체 리포트–EMR 연동 케이스 스터디 — 승인 게이팅, PHI 안전 드리프트 감지, 적대적 안전성 리뷰 (정제된 포트폴리오)"
