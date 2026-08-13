@@ -1,6 +1,15 @@
 {
-  "updated_at": "2026-08-09T07:29:25.085Z",
+  "updated_at": "2026-08-13T01:46:15.337Z",
   "repos": [
+    {
+      "name": "claudex5-engineering-harness",
+      "description": "",
+      "language": "Shell",
+      "topics": [],
+      "stars": 0,
+      "pushed_at": "2026-08-12T17:48:38Z",
+      "html_url": "https://github.com/woongjaejung/claudex5-engineering-harness"
+    },
     {
       "name": "fieldrag-v3",
       "description": "Grounded RAG and agent system for technical field-support QA, with a diagnostic evaluation harness",
