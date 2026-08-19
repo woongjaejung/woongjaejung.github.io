@@ -5,75 +5,100 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Woongjae (Jae) Jung — Bioinformatics · AI</title>
   <meta name="description" content="Portfolio of Woongjae (Jae) Jung — Senior Field Bioinformatics Support Scientist, AI Engineer, Ph.D. Bioinformatics & Epigenomics." />
+  <meta name="theme-color" content="#05070d" />
+  <meta property="og:title" content="Woongjae (Jae) Jung — Bioinformatics · AI" />
+  <meta property="og:description" content="Senior Field Bioinformatics Support Scientist · AI Engineer · Ph.D. Bioinformatics & Epigenomics" />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>" />
 </head>
 <body>
+  <a class="skip-link" href="#about">Skip to content</a>
+
   <div id="spotlight" aria-hidden="true"></div>
+  <div class="orbs" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
 
-  <div class="shell">
-    <aside id="sidebar">
-      <div class="side-head">
-        <h1 id="hero-name"></h1>
-        <p id="hero-tagline" class="tagline"></p>
-        <p id="about-text" class="intro"></p>
-      </div>
+  <nav id="site-nav" aria-label="Sections">
+    <a class="brand" href="#about" aria-label="Woongjae Jung — home">wj<span class="brand-dot">.</span></a>
+    <div class="nav-links">
+      <a class="side-link" href="#about" data-i18n="nav_about"></a>
+      <a class="side-link" href="#projects" data-i18n="nav_projects"></a>
+      <a class="side-link" href="#experience" data-i18n="nav_experience" data-section-link="experience"></a>
+      <a class="side-link" href="#publications" data-i18n="nav_publications" data-section-link="publications"></a>
+      <a class="side-link" href="#education" data-i18n="nav_education" data-section-link="education"></a>
+      <a class="side-link" href="#contact" data-i18n="nav_contact"></a>
+    </div>
+    <div class="toggles">
+      <button id="lang-toggle" class="toggle" type="button" aria-label="Switch to Korean">KO</button>
+      <button id="theme-toggle" class="toggle" type="button" aria-label="Switch to light theme">LIGHT</button>
+    </div>
+  </nav>
 
-      <nav id="side-nav" aria-label="Sections">
-        <a class="side-link" href="#about" data-i18n="nav_about"></a>
-        <a class="side-link" href="#projects" data-i18n="nav_projects"></a>
-        <a class="side-link" href="#experience" data-i18n="nav_experience" data-section-link="experience"></a>
-        <a class="side-link" href="#publications" data-i18n="nav_publications" data-section-link="publications"></a>
-        <a class="side-link" href="#education" data-i18n="nav_education" data-section-link="education"></a>
-        <a class="side-link" href="#contact" data-i18n="nav_contact"></a>
-      </nav>
+  <main>
+    <div class="bento">
 
-      <div class="side-foot">
-        <div id="contact-links" class="chip-row"></div>
-        <div class="toggles">
-          <button id="lang-toggle" class="toggle" type="button" aria-label="Switch to Korean">KO</button>
-          <button id="theme-toggle" class="toggle" type="button" aria-label="Switch to light theme">LIGHT</button>
+      <section id="about" class="section bento-card hero-card" style="--d: 0ms">
+        <div class="card-core">
+          <p class="eyebrow" data-i18n="heading_about"></p>
+          <h1 id="hero-name"></h1>
+          <p id="hero-tagline" class="tagline"></p>
+          <p id="about-text" class="intro"></p>
+          <p id="about-full" class="body-text"></p>
+          <div id="contact-links" class="chip-row hero-links"></div>
         </div>
-      </div>
-    </aside>
-
-    <main>
-      <section id="about" class="section">
-        <h2 class="label" data-i18n="heading_about"></h2>
-        <p id="about-full" class="body-text"></p>
-        <h3 class="sub-label" data-i18n="heading_skills"></h3>
-        <div id="skill-list" class="chip-row"></div>
       </section>
 
-      <section id="projects" class="section">
-        <h2 class="label" data-i18n="heading_projects"></h2>
-        <p class="muted small" data-i18n="projects_auto_note"></p>
-        <div id="project-grid"></div>
-        <p id="projects-updated" class="muted small"></p>
+      <section class="section bento-card skills-card" style="--d: 90ms" aria-label="Skills">
+        <div class="card-core">
+          <h2 class="label" data-i18n="heading_skills"></h2>
+          <div id="skill-list" class="chip-row skill-cloud"></div>
+        </div>
       </section>
 
-      <section id="experience" class="section" hidden>
-        <h2 class="label" data-i18n="heading_experience"></h2>
-        <div id="experience-list"></div>
+      <section id="projects" class="section bento-card projects-card" style="--d: 160ms">
+        <div class="card-core">
+          <h2 class="label" data-i18n="heading_projects"></h2>
+          <p class="muted small note" data-i18n="projects_auto_note"></p>
+          <div id="project-grid"></div>
+          <p id="projects-updated" class="muted small updated"></p>
+        </div>
       </section>
 
-      <section id="publications" class="section" hidden>
-        <h2 class="label" data-i18n="heading_publications"></h2>
-        <div id="publication-list"></div>
+      <section id="experience" class="section bento-card experience-card" style="--d: 0ms" hidden>
+        <div class="card-core">
+          <h2 class="label" data-i18n="heading_experience"></h2>
+          <div id="experience-list" class="entry-list"></div>
+        </div>
       </section>
 
-      <section id="education" class="section" hidden>
-        <h2 class="label" data-i18n="heading_education"></h2>
-        <div id="education-list"></div>
+      <section id="publications" class="section bento-card publications-card" style="--d: 90ms" hidden>
+        <div class="card-core">
+          <h2 class="label" data-i18n="heading_publications"></h2>
+          <div id="publication-list" class="entry-list"></div>
+        </div>
       </section>
 
-      <section id="contact" class="section">
-        <h2 class="label" data-i18n="heading_contact"></h2>
-        <div id="contact-links-main" class="chip-row"></div>
-        <p class="muted small">© <span id="year"></span> Woongjae (Jae) Jung</p>
+      <section id="education" class="section bento-card education-card" style="--d: 0ms" hidden>
+        <div class="card-core">
+          <h2 class="label" data-i18n="heading_education"></h2>
+          <div id="education-list" class="entry-list"></div>
+        </div>
       </section>
-    </main>
-  </div>
+
+      <section id="contact" class="section bento-card contact-card" style="--d: 90ms">
+        <div class="card-core">
+          <h2 class="label" data-i18n="heading_contact"></h2>
+          <div id="contact-links-main" class="chip-row contact-row"></div>
+          <p class="muted small footer-note">© <span id="year"></span> Woongjae (Jae) Jung</p>
+        </div>
+      </section>
+
+    </div>
+  </main>
 
   <script type="module" src="assets/js/main.js"></script>
 </body>

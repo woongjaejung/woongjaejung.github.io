@@ -238,14 +238,12 @@ const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 function initMotion() {
   if (reduceMotion) return;
 
-  // 로드 스태거 — 사이드바 블록이 순차 등장
-  document
-    .querySelectorAll("#sidebar .side-head, #sidebar #side-nav, #sidebar .side-foot")
-    .forEach((node) => node.classList.add("stagger"));
+  // 로드 스태거 — 플로팅 내비게이션이 위에서 떨어지며 등장
+  document.getElementById("site-nav")?.classList.add("stagger");
 
-  // 스크롤 리빌 — 섹션이 뷰포트 진입 시 1회 페이드인
-  const sections = [...document.querySelectorAll("main .section")];
-  sections.forEach((s) => s.classList.add("reveal"));
+  // 스크롤 리빌 — 벤토 카드가 뷰포트 진입 시 1회 페이드인 (--d로 스태거)
+  const cards = [...document.querySelectorAll("main .bento-card")];
+  cards.forEach((c) => c.classList.add("reveal"));
   const revealer = new IntersectionObserver(
     (entries) => {
       entries.forEach((e) => {
@@ -255,12 +253,15 @@ function initMotion() {
         }
       });
     },
-    { threshold: 0.15 }
+    { threshold: 0.12 }
   );
-  sections.forEach((s) => revealer.observe(s));
+  cards.forEach((c) => revealer.observe(c));
 
-  // 스크롤 스파이 — 현재 섹션의 사이드 링크 활성화
+  // 스크롤 스파이 — 현재 섹션의 내비 링크 활성화 (링크가 있는 카드만 관찰)
   const links = [...document.querySelectorAll(".side-link")];
+  const spied = cards.filter((c) =>
+    links.some((l) => l.getAttribute("href") === `#${c.id}`)
+  );
   const spy = new IntersectionObserver(
     (entries) => {
       entries.forEach((e) => {
@@ -272,7 +273,7 @@ function initMotion() {
     },
     { rootMargin: "-40% 0px -50% 0px" }
   );
-  sections.forEach((s) => spy.observe(s));
+  spied.forEach((s) => spy.observe(s));
 
   // 커서 스포트라이트 — 마우스가 있는 기기에서만
   if (matchMedia("(hover: hover) and (pointer: fine)").matches) {
