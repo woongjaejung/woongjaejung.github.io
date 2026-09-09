@@ -73,7 +73,9 @@ function renderTopbar({ view, showLocus, showTheme }) {
   const bar = document.getElementById("topbar");
   const brand = el("a", "brand", "jae.genome ");
   brand.href = "index.html?view=browser"; // never bounce through the stored-view redirect
-  brand.appendChild(el("small", null, state.updatedAt ? `hg-jae · build ${state.updatedAt.slice(0, 7).replace("-", ".")}` : "hg-jae"));
+  const buildLabel = el("small", null, state.updatedAt ? `hg-jae · build ${state.updatedAt.slice(0, 7).replace("-", ".")}` : "hg-jae");
+  buildLabel.id = "build-label";
+  brand.appendChild(buildLabel);
   const views = el("nav", "views");
   views.setAttribute("aria-label", "View");
   for (const v of VIEWS) {
