@@ -43,7 +43,7 @@ h1{font-family:var(--disp);font-size:clamp(34px,4.6vw,54px);line-height:1.02;let
 .helix{position:relative;min-height:260px}
 .helix canvas{width:100%;height:260px;display:block}
 .ticker{position:absolute;left:0;right:0;bottom:-2px;font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--muted);white-space:nowrap;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
-.ticker span{display:inline-block;padding-left:100%;animation:tick 28s linear infinite}
+.ticker span{display:inline-block;padding-left:100%;animation:tick 28s linear infinite;animation-delay:-12s}
 .ticker b{font-weight:500}
 .ticker .A{color:var(--nA)} .ticker .C{color:var(--nC)} .ticker .G{color:var(--nG)} .ticker .T{color:var(--nT)}
 @keyframes tick{to{transform:translateX(-100%)}}
@@ -139,6 +139,6 @@ table.vcf td.id{font-family:var(--sans);font-weight:500}
 }
 
 @media (prefers-reduced-motion: reduce){
-  .ticker span{animation:none}
+  .ticker span{animation:none;padding-left:0}
   .ideo .loc{transition:none}
 }
