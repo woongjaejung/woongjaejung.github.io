@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   resolveInitialLang,
   resolveInitialTheme,
+  resolveInitialView,
   translate,
   repoDescription,
   pick,
@@ -64,4 +65,17 @@ test("resolveInitialTheme: 저장값이 없거나 이상하면 다크가 기본"
   assert.equal(resolveInitialTheme(undefined), "dark");
   assert.equal(resolveInitialTheme("garbage"), "dark");
   assert.equal(resolveInitialTheme(""), "dark");
+});
+
+test("resolveInitialTheme: fallback argument is used when nothing is stored", () => {
+  assert.equal(resolveInitialTheme(null, "light"), "light");
+  assert.equal(resolveInitialTheme("dark", "light"), "dark");
+  assert.equal(resolveInitialTheme(null), "dark");
+});
+
+test("resolveInitialView: query beats storage, storage beats default", () => {
+  assert.equal(resolveInitialView(null, ""), "browser");
+  assert.equal(resolveInitialView("run", ""), "run");
+  assert.equal(resolveInitialView("classic", "?view=browser"), "browser");
+  assert.equal(resolveInitialView("garbage", "?view=nope"), "browser");
 });

@@ -12,10 +12,103 @@
     "about": {
       "en": "Forward-deployed, customer-facing engineer with 10+ years of research and field experience, turning ambiguous enterprise problems into reliable deployed solutions — most recently as the single technical bridge between Korean enterprise customers and product, R&D, and specialist support teams at global headquarters. I work across regulated healthcare, clinical diagnostics, and biotech institutions, building automation in Python, Bash, and APIs, and I use LLM- and agent-driven tooling daily in real diagnostic and delivery workflows.",
       "ko": "10년 이상의 연구·필드 경험을 바탕으로 모호한 기업 현장의 문제를 신뢰할 수 있는 해법으로 만들어 배포하는 고객 대면 엔지니어입니다. 최근에는 국내 엔터프라이즈 고객과 글로벌 본사의 제품·R&D·전문 지원 팀을 잇는 단일 기술 창구 역할을 맡고 있습니다. 규제 의료, 임상 진단, 바이오텍 기관 전반에서 일하며 Python·Bash·API로 자동화를 구축하고, LLM과 에이전트 기반 도구를 실제 진단·전달 워크플로에 매일 활용합니다."
+    },
+    "career_start": "2015.03",
+    "award": {
+      "en": "2024 MVP · Asia Middle East Region",
+      "ko": "2024 MVP · 아시아·중동 지역",
+      "year": "2024"
+    },
+    "hero_motif": "CCGCGNGGNGGCAG",
+    "hero_motif_label": {
+      "en": "CTCF core motif",
+      "ko": "CTCF 핵심 모티프"
     }
   },
-  "skills": ["Genomics", "NGS", "Epigenomics", "Multiomics", "Python", "Machine Learning", "LLM", "GenAI", "GCP", "AWS", "Pipeline Engineering"],
-  "exclude_repos": ["woongjaejung.github.io", "woongjaejung", "fieldrag"],
+  "skills": [
+    {
+      "name": "Genomics",
+      "chrom": "genomics",
+      "af": 0.95,
+      "dp": 11,
+      "info": "WGS/WES · DRAGEN · variant review"
+    },
+    {
+      "name": "NGS",
+      "chrom": "genomics",
+      "af": 0.95,
+      "dp": 11,
+      "info": "Illumina platforms · bcl-convert · QC"
+    },
+    {
+      "name": "Epigenomics",
+      "chrom": "genomics",
+      "af": 0.9,
+      "dp": 9,
+      "info": "ChIP-seq · ATAC-seq · Hi-C · CTCF"
+    },
+    {
+      "name": "Multiomics",
+      "chrom": "genomics",
+      "af": 0.75,
+      "dp": 6,
+      "info": "integration · RNA + chromatin"
+    },
+    {
+      "name": "Python",
+      "chrom": "ai",
+      "af": 0.9,
+      "dp": 11,
+      "info": "pipelines · FastAPI · tooling"
+    },
+    {
+      "name": "Machine Learning",
+      "chrom": "ai",
+      "af": 0.7,
+      "dp": 2,
+      "info": "evaluation · classical ML"
+    },
+    {
+      "name": "LLM",
+      "chrom": "ai",
+      "af": 0.8,
+      "dp": 2,
+      "info": "RAG · agents · eval harnesses"
+    },
+    {
+      "name": "GenAI",
+      "chrom": "ai",
+      "af": 0.75,
+      "dp": 2,
+      "info": "Claude Code · Codex · guarded tools"
+    },
+    {
+      "name": "GCP",
+      "chrom": "cloud",
+      "af": 0.7,
+      "dp": 2,
+      "info": "Vertex · Cloud Run · IAM"
+    },
+    {
+      "name": "AWS",
+      "chrom": "cloud",
+      "af": 0.65,
+      "dp": 2,
+      "info": "EC2 · S3 · Batch"
+    },
+    {
+      "name": "Pipeline Engineering",
+      "chrom": "cloud",
+      "af": 0.85,
+      "dp": 9,
+      "info": "Nextflow-style DAGs · containers · CI"
+    }
+  ],
+  "exclude_repos": [
+    "woongjaejung.github.io",
+    "woongjaejung",
+    "fieldrag"
+  ],
   "repo_overrides": {
     "clinical-genomics-emr-bridge": {
       "description_ko": "임상 유전체 리포트–EMR 연동 케이스 스터디 — 승인 게이팅, PHI 안전 드리프트 감지, 적대적 안전성 리뷰 (정제된 포트폴리오)"
@@ -24,23 +117,112 @@
       "description_ko": "NGS 필드 지원을 위한 grounded RAG + 에이전트 어시스턴트 (Google Cloud, Gemini)"
     },
     "bclconvert_ubuntu_version": {
-      "description_ko": "Oracle Linux 컨테이너 래퍼로 Ubuntu에서 Illumina bcl-convert 실행"
+      "description_ko": "Oracle Linux 컨테이너 래퍼로 Ubuntu에서 Illumina bcl-convert 실행",
+      "exons": [
+        "container wrapper",
+        "bcl-convert"
+      ]
+    },
+    "claudex5-engineering-harness": {
+      "exons": [
+        "role routing",
+        "review gates",
+        "Claude + Codex",
+        "installable"
+      ]
+    },
+    "dragen-cnv-plot-builder-showcase": {
+      "exons": [
+        "exon-level CNV",
+        "interactive HTML",
+        "artifact vs true call",
+        "Electron"
+      ]
+    },
+    "fieldrag-v3": {
+      "exons": [
+        "grounded RAG",
+        "agent",
+        "diagnostic evals",
+        "BM25"
+      ]
+    },
+    "ICA_CSV_Batch_Runner_showcase": {
+      "exons": [
+        "preflight checks",
+        "CSV batch",
+        "ICA API"
+      ]
+    },
+    "ICA_usage_dashboard_showcase": {
+      "exons": [
+        "usage analytics",
+        "FastAPI",
+        "pandas"
+      ]
+    },
+    "tailterm": {
+      "exons": [
+        "ttyd",
+        "Tailscale serve",
+        "PWA shell",
+        "no public ports"
+      ]
     }
   },
   "i18n": {
-    "nav_about": { "en": "About", "ko": "소개" },
-    "nav_projects": { "en": "Projects", "ko": "프로젝트" },
-    "nav_experience": { "en": "Experience", "ko": "경력" },
-    "nav_publications": { "en": "Publications", "ko": "논문" },
-    "nav_education": { "en": "Education", "ko": "학력" },
-    "nav_contact": { "en": "Contact", "ko": "연락처" },
-    "heading_about": { "en": "About", "ko": "소개" },
-    "heading_skills": { "en": "Skills", "ko": "기술" },
-    "heading_projects": { "en": "Projects", "ko": "프로젝트" },
-    "heading_experience": { "en": "Experience", "ko": "경력" },
-    "heading_publications": { "en": "Publications", "ko": "논문" },
-    "heading_education": { "en": "Education", "ko": "학력" },
-    "heading_contact": { "en": "Contact", "ko": "연락처" },
+    "nav_about": {
+      "en": "About",
+      "ko": "소개"
+    },
+    "nav_projects": {
+      "en": "Projects",
+      "ko": "프로젝트"
+    },
+    "nav_experience": {
+      "en": "Experience",
+      "ko": "경력"
+    },
+    "nav_publications": {
+      "en": "Publications",
+      "ko": "논문"
+    },
+    "nav_education": {
+      "en": "Education",
+      "ko": "학력"
+    },
+    "nav_contact": {
+      "en": "Contact",
+      "ko": "연락처"
+    },
+    "heading_about": {
+      "en": "About",
+      "ko": "소개"
+    },
+    "heading_skills": {
+      "en": "Skills",
+      "ko": "기술"
+    },
+    "heading_projects": {
+      "en": "Projects",
+      "ko": "프로젝트"
+    },
+    "heading_experience": {
+      "en": "Experience",
+      "ko": "경력"
+    },
+    "heading_publications": {
+      "en": "Publications",
+      "ko": "논문"
+    },
+    "heading_education": {
+      "en": "Education",
+      "ko": "학력"
+    },
+    "heading_contact": {
+      "en": "Contact",
+      "ko": "연락처"
+    },
     "projects_auto_note": {
       "en": "Automatically synced from my GitHub once a day.",
       "ko": "GitHub에서 하루 한 번 자동으로 동기화됩니다."
@@ -49,7 +231,274 @@
       "en": "Could not load project list — view them directly on GitHub.",
       "ko": "프로젝트 목록을 불러오지 못했습니다 — GitHub에서 직접 확인해 주세요."
     },
-    "footer_updated": { "en": "Projects updated", "ko": "프로젝트 갱신" }
+    "footer_updated": {
+      "en": "Projects updated",
+      "ko": "프로젝트 갱신"
+    },
+    "nav_skills": {
+      "en": "Skills",
+      "ko": "스킬"
+    },
+    "view_browser": {
+      "en": "Browser",
+      "ko": "브라우저"
+    },
+    "view_run": {
+      "en": "Run monitor",
+      "ko": "런 모니터"
+    },
+    "view_classic": {
+      "en": "Classic",
+      "ko": "클래식"
+    },
+    "view_hint": {
+      "en": "Also available: Run monitor and Classic views.",
+      "ko": "런 모니터·클래식 뷰도 있습니다."
+    },
+    "view_hint_close": {
+      "en": "Dismiss",
+      "ko": "닫기"
+    },
+    "locus_label": {
+      "en": "locus",
+      "ko": "위치"
+    },
+    "locus_go": {
+      "en": "Go",
+      "ko": "이동"
+    },
+    "projects_track_meta": {
+      "en": "{n} genes · {k} chromosomes · synced from GitHub daily",
+      "ko": "유전자 {n}개 · 염색체 {k}개 · GitHub에서 매일 동기화"
+    },
+    "projects_track_note": {
+      "en": "Exons = feature groups named in the repo description. Click a gene for details.",
+      "ko": "엑손 = 저장소 설명에 적힌 기능 단위. 유전자를 클릭하면 상세가 열립니다."
+    },
+    "experience_track_meta": {
+      "en": "coverage track · {t0}–{t1} · {n} regions",
+      "ko": "커버리지 트랙 · {t0}–{t1} · 구간 {n}개"
+    },
+    "publications_track_meta": {
+      "en": "peaks · expanded · {n} features",
+      "ko": "피크 · 펼침 · {n}개"
+    },
+    "publications_egg_hint": {
+      "en": "click a peak → 3D structure",
+      "ko": "피크 클릭 → 3D 구조"
+    },
+    "education_track_meta": {
+      "en": "markers · {n} loci",
+      "ko": "마커 · {n}개"
+    },
+    "skills_track_meta": {
+      "en": "variant panel · {n} calls · FILTER=PASS",
+      "ko": "변이 패널 · {n}개 · FILTER=PASS"
+    },
+    "skills_legend": {
+      "en": "AF = proficiency · DP = years",
+      "ko": "AF = 숙련도 · DP = 연차"
+    },
+    "contact_track_meta": {
+      "en": "export session",
+      "ko": "세션 내보내기"
+    },
+    "structure_loading": {
+      "en": "loading 3D viewer…",
+      "ko": "3D 뷰어 불러오는 중…"
+    },
+    "structure_none": {
+      "en": "No structure is linked to this paper.",
+      "ko": "이 논문에 연결된 구조가 없습니다."
+    },
+    "structure_lib_failed": {
+      "en": "The 3D viewer could not load. The DOI link still works.",
+      "ko": "3D 뷰어를 불러오지 못했습니다. DOI 링크는 사용할 수 있습니다."
+    },
+    "structure_fetch_failed": {
+      "en": "The structure could not be fetched from RCSB. Open the RCSB entry instead.",
+      "ko": "RCSB에서 구조를 가져오지 못했습니다. RCSB 항목을 대신 열어 보세요."
+    },
+    "structure_hint": {
+      "en": "drag to rotate · scroll to zoom",
+      "ko": "드래그로 회전 · 스크롤로 확대"
+    },
+    "structure_close": {
+      "en": "esc · close",
+      "ko": "esc · 닫기"
+    },
+    "popup_open_github": {
+      "en": "Open on GitHub ↗",
+      "ko": "GitHub에서 열기 ↗"
+    },
+    "hero_jump": {
+      "en": "Jump to projects",
+      "ko": "프로젝트로 이동"
+    },
+    "legend_other": {
+      "en": "other",
+      "ko": "기타"
+    },
+    "peak_legend": {
+      "en": "red peak = first author · amber = co-author",
+      "ko": "빨간 피크 = 1저자 · 호박색 = 공저자"
+    },
+    "run_yield": {
+      "en": "Yield",
+      "ko": "산출량"
+    },
+    "run_yield_note": {
+      "en": "counted from Ph.D.",
+      "ko": "박사 과정부터 계산"
+    },
+    "run_clusters": {
+      "en": "Clusters PF",
+      "ko": "클러스터 PF"
+    },
+    "run_clusters_note": {
+      "en": "public repos, synced daily",
+      "ko": "공개 저장소, 매일 동기화"
+    },
+    "run_pubs": {
+      "en": "Publications",
+      "ko": "논문"
+    },
+    "run_qc": {
+      "en": "Run QC",
+      "ko": "런 QC"
+    },
+    "run_flowcell": {
+      "en": "Flowcell",
+      "ko": "플로우셀"
+    },
+    "run_flowcell_note": {
+      "en": "density = description length",
+      "ko": "밀도 = 설명 길이"
+    },
+    "run_heat": {
+      "en": "Intensity by cycle",
+      "ko": "사이클별 강도"
+    },
+    "run_heat_note": {
+      "en": "skill × year · hand-edited values",
+      "ko": "스킬 × 연도 · 직접 편집한 값"
+    },
+    "run_sheet": {
+      "en": "Sample sheet",
+      "ko": "샘플 시트"
+    },
+    "run_log": {
+      "en": "Run log",
+      "ko": "런 로그"
+    },
+    "run_note": {
+      "en": "Lanes, cycles and intensities are metaphors mapped from the same content.json. No instrument branding is used.",
+      "ko": "레인·사이클·강도는 같은 content.json에서 만든 메타포입니다. 특정 장비의 브랜드는 쓰지 않습니다."
+    },
+    "run_status": {
+      "en": "Sequencing · cycle {cycle}",
+      "ko": "시퀀싱 중 · 사이클 {cycle}"
+    },
+    "run_instrument": {
+      "en": "Instrument",
+      "ko": "장비"
+    },
+    "run_chemistry": {
+      "en": "Chemistry",
+      "ko": "케미스트리"
+    },
+    "run_readlength": {
+      "en": "Read length",
+      "ko": "리드 길이"
+    },
+    "run_started": {
+      "en": "Started",
+      "ko": "시작"
+    },
+    "run_progress": {
+      "en": "cluster gen ✓ · read 1 ✓ · index ✓ · read 2 in progress",
+      "ko": "클러스터 생성 ✓ · 리드 1 ✓ · 인덱스 ✓ · 리드 2 진행 중"
+    },
+    "hero_eyebrow": {
+      "en": "chrAbout · p-arm · 1 gene",
+      "ko": "chrAbout · p-arm · 유전자 1개"
+    },
+    "footer_views": {
+      "en": "Other views",
+      "ko": "다른 뷰"
+    },
+    "log_pre": {
+      "en": "Pre-run",
+      "ko": "런 이전"
+    },
+    "log_started": {
+      "en": "Run started",
+      "ko": "런 시작"
+    },
+    "log_lane": {
+      "en": "Lane switch",
+      "ko": "레인 전환"
+    },
+    "log_index": {
+      "en": "Index read complete",
+      "ko": "인덱스 리드 완료"
+    },
+    "log_peak": {
+      "en": "Peak called",
+      "ko": "피크 검출"
+    },
+    "log_first": {
+      "en": "First author",
+      "ko": "1저자"
+    },
+    "log_qc": {
+      "en": "QC flag",
+      "ko": "QC 플래그"
+    },
+    "log_cluster": {
+      "en": "Cluster PF",
+      "ko": "클러스터 PF"
+    },
+    "log_pushed": {
+      "en": "pushed",
+      "ko": "푸시됨"
+    },
+    "log_tail": {
+      "en": "Read 2 in progress",
+      "ko": "리드 2 진행 중"
+    },
+    "unit_years": {
+      "en": "years",
+      "ko": "년"
+    },
+    "unit_projects": {
+      "en": "projects",
+      "ko": "프로젝트"
+    },
+    "unit_peer_reviewed": {
+      "en": "peer-reviewed",
+      "ko": "동료 심사"
+    },
+    "run_first_author": {
+      "en": "{n} first-author",
+      "ko": "1저자 {n}편"
+    },
+    "run_instrument_value": {
+      "en": "Field scientist, gen 3",
+      "ko": "필드 사이언티스트 3세대"
+    },
+    "run_chemistry_value": {
+      "en": "Genomics + AI",
+      "ko": "유전체학 + AI"
+    },
+    "run_readlength_value": {
+      "en": "2 × 150 (EN/KO)",
+      "ko": "2 × 150 (한/영)"
+    },
+    "unit_lanes": {
+      "en": "lanes",
+      "ko": "레인"
+    }
   },
   "experience": [
     {
@@ -58,7 +507,10 @@
         "en": "Senior Field Bioinformatics Support Scientist",
         "ko": "시니어 필드 생물정보학 지원 과학자"
       },
-      "org": { "en": "Illumina Korea", "ko": "일루미나 코리아" },
+      "org": {
+        "en": "Illumina Korea",
+        "ko": "일루미나 코리아"
+      },
       "summary": {
         "en": "Primary technical liaison between Korean enterprise customers and Illumina HQ, owning complex issues end-to-end across DRAGEN, Illumina Cloud platforms, customer infrastructure, and NGS pipelines. Awarded 2024 MVP — Asia Middle East Region.",
         "ko": "국내 엔터프라이즈 고객과 일루미나 본사를 잇는 기술 창구로서 DRAGEN, 일루미나 클라우드 플랫폼, 고객 인프라, NGS 파이프라인 전반의 복합 이슈를 처음부터 끝까지 담당. 2024년 아시아·중동 지역 MVP 수상."
@@ -81,7 +533,10 @@
     },
     {
       "period": "2015.03 – 2017.02",
-      "title": { "en": "Bioinformatics Researcher", "ko": "생물정보학 연구원" },
+      "title": {
+        "en": "Bioinformatics Researcher",
+        "ko": "생물정보학 연구원"
+      },
       "org": {
         "en": "Lab of Post-genomics Bioinformatics, Soongsil University",
         "ko": "숭실대학교 포스트지노믹스 생물정보학 연구실"
@@ -93,7 +548,10 @@
     },
     {
       "period": "2012.02 – 2015.02",
-      "title": { "en": "Research Assistant — Immunology", "ko": "연구조교 — 면역학" },
+      "title": {
+        "en": "Research Assistant — Immunology",
+        "ko": "연구조교 — 면역학"
+      },
       "org": {
         "en": "Lab of Immunology, Soongsil University",
         "ko": "숭실대학교 면역학 연구실"
@@ -110,28 +568,56 @@
       "title": "Vorinostat-induced acetylation of RUNX3 reshapes transcriptional profile through long-range enhancer-promoter interactions in natural killer cells",
       "venue": "BMB Reports",
       "authors": "Co-author",
-      "link": "https://doi.org/10.5483/BMBRep.2023-0044"
+      "link": "https://doi.org/10.5483/BMBRep.2023-0044",
+      "pdb": null,
+      "pdb_chain": null,
+      "gene": "RUNX3",
+      "blurb": {
+        "en": "No structure is shown for this paper yet. The DOI has the full text.",
+        "ko": "이 논문의 구조는 아직 표시하지 않습니다. DOI에서 전문을 볼 수 있습니다."
+      }
     },
     {
       "year": "2021",
       "title": "CTCF-mediated chromatin looping provides a topological framework for the formation of phase-separated transcriptional condensates",
       "venue": "Nucleic Acids Research",
       "authors": "Co-author",
-      "link": "https://doi.org/10.1093/nar/gkab1242"
+      "link": "https://doi.org/10.1093/nar/gkab1242",
+      "pdb": "5T0U",
+      "pdb_chain": "A",
+      "gene": "CTCF",
+      "blurb": {
+        "en": "CTCF zinc fingers 2–7 wrapped around DNA — the protein whose loops organise the genome you are scrolling through.",
+        "ko": "DNA를 감싼 CTCF 징크핑거 2–7. 지금 스크롤 중인 게놈을 고리로 정리하는 단백질입니다."
+      }
     },
     {
       "year": "2021",
       "title": "Liver-Specific Deletion of Mouse CTCF Leads to Hepatic Steatosis via Augmented PPARγ Signaling",
       "venue": "Cellular and Molecular Gastroenterology and Hepatology",
       "authors": "First author",
-      "link": "https://doi.org/10.1016/j.jcmgh.2021.07.016"
+      "link": "https://doi.org/10.1016/j.jcmgh.2021.07.016",
+      "pdb": "5T0U",
+      "pdb_chain": "A",
+      "gene": "CTCF",
+      "blurb": {
+        "en": "First-author work. Removing CTCF from the mouse liver rewires PPARγ signalling; the structure shows what was removed.",
+        "ko": "1저자 논문. 마우스 간에서 CTCF를 제거하면 PPARγ 신호가 재배선됩니다. 구조는 제거된 단백질입니다."
+      }
     },
     {
       "year": "2021",
       "title": "p53 expression confers sensitivity to 5-fluorouracil via distinct chromatin accessibility dynamics in human colorectal cancer",
       "venue": "Oncology Letters",
       "authors": "Co-author",
-      "link": "https://doi.org/10.3892/ol.2021.12487"
+      "link": "https://doi.org/10.3892/ol.2021.12487",
+      "pdb": "1TUP",
+      "pdb_chain": "B",
+      "gene": "p53",
+      "blurb": {
+        "en": "p53 DNA-binding core domain gripping its response element. Chromatin accessibility around such sites is what the paper measured.",
+        "ko": "반응 요소를 붙잡은 p53 DNA 결합 도메인. 논문은 이런 자리 주변의 염색질 접근성을 측정했습니다."
+      }
     }
   ],
   "education": [
@@ -148,7 +634,10 @@
     },
     {
       "period": "2015.02",
-      "degree": { "en": "M.S. in Immunology", "ko": "면역학 석사" },
+      "degree": {
+        "en": "M.S. in Immunology",
+        "ko": "면역학 석사"
+      },
       "school": {
         "en": "Soongsil University, Seoul, Korea",
         "ko": "숭실대학교, 서울"
@@ -156,7 +645,10 @@
     },
     {
       "period": "2013.02",
-      "degree": { "en": "B.S. in Bioinformatics", "ko": "생물정보학 학사" },
+      "degree": {
+        "en": "B.S. in Bioinformatics",
+        "ko": "생물정보학 학사"
+      },
       "school": {
         "en": "Soongsil University, Seoul, Korea",
         "ko": "숭실대학교, 서울"
@@ -166,8 +658,229 @@
   "contact": {
     "email": "woongjaej@gmail.com",
     "links": [
-      { "label": "GitHub", "url": "https://github.com/woongjaejung" },
-      { "label": "LinkedIn", "url": "https://www.linkedin.com/in/jae-woong-jae-jung-5296bb242" }
+      {
+        "label": "GitHub",
+        "url": "https://github.com/woongjaejung"
+      },
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/jae-woong-jae-jung-5296bb242"
+      }
+    ]
+  },
+  "skill_timeline": {
+    "years": [
+      2012,
+      2026
+    ],
+    "rows": [
+      {
+        "label": {
+          "en": "Immunology",
+          "ko": "면역학"
+        },
+        "values": [
+          3,
+          3,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "label": {
+          "en": "Genomics / NGS",
+          "ko": "유전체학 / NGS"
+        },
+        "values": [
+          0,
+          1,
+          2,
+          3,
+          3,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      {
+        "label": {
+          "en": "Epigenomics",
+          "ko": "후성유전체학"
+        },
+        "values": [
+          0,
+          0,
+          1,
+          2,
+          3,
+          4,
+          4,
+          4,
+          4,
+          4,
+          3,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      {
+        "label": {
+          "en": "Python",
+          "ko": "Python"
+        },
+        "values": [
+          1,
+          1,
+          2,
+          3,
+          3,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      {
+        "label": {
+          "en": "Pipeline eng.",
+          "ko": "파이프라인"
+        },
+        "values": [
+          0,
+          0,
+          1,
+          2,
+          3,
+          3,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      {
+        "label": {
+          "en": "Cloud (GCP/AWS)",
+          "ko": "클라우드"
+        },
+        "values": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          3
+        ]
+      },
+      {
+        "label": {
+          "en": "ML",
+          "ko": "머신러닝"
+        },
+        "values": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          3
+        ]
+      },
+      {
+        "label": {
+          "en": "LLM / agents",
+          "ko": "LLM / 에이전트"
+        },
+        "values": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          4,
+          4
+        ]
+      },
+      {
+        "label": {
+          "en": "Field / customer",
+          "ko": "필드 / 고객"
+        },
+        "values": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          4,
+          4,
+          4,
+          4
+        ]
+      }
     ]
   }
 }

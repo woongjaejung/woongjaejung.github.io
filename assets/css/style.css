@@ -138,6 +138,7 @@ a:hover { text-decoration: underline; }
   display: flex;
   align-items: center;
   gap: 0.7rem;
+  width: max-content;
   max-width: calc(100vw - 1.6rem);
   padding: 0.4rem 0.5rem 0.4rem 1.05rem;
   border-radius: 999px;
@@ -206,9 +207,13 @@ a:hover { text-decoration: underline; }
   cursor: pointer;
   transition: border-color 0.3s var(--ease), color 0.3s var(--ease),
     transform 0.3s var(--ease);
+  white-space: nowrap;
 }
 .toggle:hover { border-color: var(--accent); color: var(--accent); }
 .toggle:active { transform: scale(0.96); }
+.toggle.view-link { text-decoration: none; color: var(--muted); }
+.toggle.view-link:hover { color: var(--accent); }
+@media (max-width: 620px) { .toggle { padding: 0.38rem 0.55rem; letter-spacing: 0.06em; } }
 
 /* ── bento grid ──────────────────────────── */
 
@@ -527,8 +532,10 @@ main {
 
 @media (max-width: 620px) {
   .brand { display: none; }
-  #site-nav { padding-left: 0.5rem; }
+  #site-nav { padding-left: 0.5rem; flex-wrap: wrap; justify-content: center; }
   .nav-links {
+    flex: 1 1 100%;
+    order: 2;
     mask-image: linear-gradient(90deg, transparent, #000 0.8rem, #000 calc(100% - 0.8rem), transparent);
   }
   .entry-list .entry,

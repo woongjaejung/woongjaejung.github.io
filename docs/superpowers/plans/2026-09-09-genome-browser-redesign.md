@@ -121,6 +121,9 @@ test("every new i18n key has en and ko", () => {
     "run_yield", "run_yield_note", "run_clusters", "run_clusters_note", "run_pubs", "run_qc", "run_flowcell",
     "run_flowcell_note", "run_heat", "run_heat_note", "run_sheet", "run_log", "run_note", "run_status",
     "run_instrument", "run_chemistry", "run_readlength", "run_started", "run_progress",
+    "hero_eyebrow", "footer_views", "log_pre", "log_started", "log_lane", "log_index", "log_peak", "log_first", "log_qc",
+    "log_cluster", "log_pushed", "log_tail", "unit_years", "unit_projects", "unit_peer_reviewed", "run_first_author",
+    "run_instrument_value", "run_chemistry_value", "run_readlength_value", "unit_lanes",
   ];
   for (const k of keys) {
     assert.equal(typeof content.i18n[k]?.en, "string", `${k}.en`);
@@ -240,27 +243,92 @@ Object.assign(c.i18n, {
   run_readlength: { en: "Read length", ko: "리드 길이" },
   run_started: { en: "Started", ko: "시작" },
   run_progress: { en: "cluster gen ✓ · read 1 ✓ · index ✓ · read 2 in progress", ko: "클러스터 생성 ✓ · 리드 1 ✓ · 인덱스 ✓ · 리드 2 진행 중" },
+  hero_eyebrow: { en: "chrAbout · p-arm · 1 gene", ko: "chrAbout · p-arm · 유전자 1개" },
+  footer_views: { en: "Other views", ko: "다른 뷰" },
+  log_pre: { en: "Pre-run", ko: "런 이전" },
+  log_started: { en: "Run started", ko: "런 시작" },
+  log_lane: { en: "Lane switch", ko: "레인 전환" },
+  log_index: { en: "Index read complete", ko: "인덱스 리드 완료" },
+  log_peak: { en: "Peak called", ko: "피크 검출" },
+  log_first: { en: "First author", ko: "1저자" },
+  log_qc: { en: "QC flag", ko: "QC 플래그" },
+  log_cluster: { en: "Cluster PF", ko: "클러스터 PF" },
+  log_pushed: { en: "pushed", ko: "푸시됨" },
+  log_tail: { en: "Read 2 in progress", ko: "리드 2 진행 중" },
+  unit_years: { en: "years", ko: "년" },
+  unit_projects: { en: "projects", ko: "프로젝트" },
+  unit_peer_reviewed: { en: "peer-reviewed", ko: "동료 심사" },
+  run_first_author: { en: "{n} first-author", ko: "1저자 {n}편" },
+  run_instrument_value: { en: "Field scientist, gen 3", ko: "필드 사이언티스트 3세대" },
+  run_chemistry_value: { en: "Genomics + AI", ko: "유전체학 + AI" },
+  run_readlength_value: { en: "2 × 150 (EN/KO)", ko: "2 × 150 (한/영)" },
+  unit_lanes: { en: "lanes", ko: "레인" },
 });
+
+const exonOverrides = {
+  "claudex5-engineering-harness": ["role routing", "review gates", "Claude + Codex", "installable"],
+  "dragen-cnv-plot-builder-showcase": ["exon-level CNV", "interactive HTML", "artifact vs true call", "Electron"],
+  "fieldrag-v3": ["grounded RAG", "agent", "diagnostic evals", "BM25"],
+  "ICA_CSV_Batch_Runner_showcase": ["preflight checks", "CSV batch", "ICA API"],
+  "ICA_usage_dashboard_showcase": ["usage analytics", "FastAPI", "pandas"],
+  "bclconvert_ubuntu_version": ["container wrapper", "bcl-convert"],
+  "tailterm": ["ttyd", "Tailscale serve", "PWA shell", "no public ports"],
+};
+c.repo_overrides = c.repo_overrides || {};
+for (const [name, exons] of Object.entries(exonOverrides)) c.repo_overrides[name] = { ...(c.repo_overrides[name] || {}), exons };
 
 writeFileSync(path, JSON.stringify(c, null, 2) + "\n");
 EOF
 )"
 ```
 
-- [ ] **Step 4: Run the test again**
+- [ ] **Step 4: Keep the live bento renderer working with skill objects**
+
+`assets/js/main.js:98-104` renders `state.content.skills` as strings. Replace `renderSkills` so the page keeps working from this commit on (the `normalizeSkills` helper is added to `logic.mjs` in this same step so the branch never has a broken page):
+
+```js
+// assets/js/logic.mjs — append
+export function normalizeSkills(skills) {
+  if (!Array.isArray(skills)) return [];
+  return skills.map((s) =>
+    typeof s === "string"
+      ? { name: s, chrom: "other", af: null, dp: null, info: "" }
+      : {
+          name: String(s.name ?? ""),
+          chrom: s.chrom ?? "other",
+          af: typeof s.af === "number" ? s.af : null,
+          dp: Number.isInteger(s.dp) ? s.dp : null,
+          info: s.info ?? "",
+        }
+  );
+}
+```
+
+```js
+// assets/js/main.js — add normalizeSkills to the import from "./logic.mjs", then:
+function renderSkills() {
+  const wrap = document.getElementById("skill-list");
+  wrap.replaceChildren(
+    ...normalizeSkills(state.content.skills).map((s) => el("span", "skill-chip", s.name))
+  );
+}
+```
+
+- [ ] **Step 5: Run the test again**
 
 Run: `node --test tests/content.test.mjs`
 Expected: PASS (5 tests).
 
-- [ ] **Step 5: Run the whole suite (existing tests must still pass)**
+- [ ] **Step 6: Run the whole suite and check the live page**
 
-Run: `node --test`
-Expected: all pass. `tests/logic.test.mjs` and `tests/transform.test.mjs` do not read `skills`, so nothing else changes.
+Run: `node --test` → all pass.
+Run: `python3 -m http.server 8000` and `timeout 30 /opt/google/chrome/chrome --headless=new --no-sandbox --disable-gpu --virtual-time-budget=3000 --dump-dom http://localhost:8000/index.html | grep -o 'skill-chip">[^<]*' | head -2`
+Expected: `skill-chip">Genomics` and `skill-chip">NGS` (not `[object Object]`).
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
-git add data/content.json tests/content.test.mjs
+git add data/content.json tests/content.test.mjs assets/js/logic.mjs assets/js/main.js
 git commit -m "data: add career_start, skill objects, skill_timeline, publication structures, view i18n"
 ```
 
@@ -277,6 +345,7 @@ git commit -m "data: add career_start, skill objects, skill_timeline, publicatio
 - Produces (all exported from `assets/js/logic.mjs`):
   - `normalizeSkills(skills) → Array<{name:string, chrom:string, af:number|null, dp:number|null, info:string}>`
   - `normalizeTimeline(tl) → {years:number[], rows:Array<{label, values:number[]}>, warnings:string[]}`
+  - `normalizePdb(id) → string|null` (upper-cased 4-char id or null with a console warning)
   - `careerYears(careerStart:string, now:Date) → number` (one decimal)
   - `runId(careerStart:string) → string` e.g. `"JAE-20150301"`
   - `resolveInitialTheme(stored, fallback = "dark")` (existing, new second arg)
@@ -307,7 +376,7 @@ Create `tests/mapping.test.mjs`:
 ```js
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { normalizeSkills, normalizeTimeline, careerYears, runId } from "../assets/js/logic.mjs";
+import { normalizeSkills, normalizeTimeline, normalizePdb, careerYears, runId } from "../assets/js/logic.mjs";
 
 test("normalizeSkills: legacy string array becomes objects with null af/dp", () => {
   assert.deepEqual(normalizeSkills(["Genomics"]), [
@@ -333,6 +402,14 @@ test("normalizeTimeline: pads short rows, truncates long rows, records warnings"
 
 test("normalizeTimeline: missing input yields empty rows", () => {
   assert.deepEqual(normalizeTimeline(undefined), { years: [], rows: [], warnings: [] });
+});
+
+test("normalizePdb: accepts 4-char ids, upper-cases, rejects garbage", () => {
+  assert.equal(normalizePdb("5t0u"), "5T0U");
+  assert.equal(normalizePdb(null), null);
+  const orig = console.warn; const warned = []; console.warn = (m) => warned.push(m);
+  try { assert.equal(normalizePdb("nope!"), null); } finally { console.warn = orig; }
+  assert.equal(warned.length, 1);
 });
 
 test("careerYears: 2015.03 → 2026-09 is 11.5", () => {
@@ -368,19 +445,14 @@ export function resolveInitialView(stored, query) {
   return "browser";
 }
 
-export function normalizeSkills(skills) {
-  if (!Array.isArray(skills)) return [];
-  return skills.map((s) =>
-    typeof s === "string"
-      ? { name: s, chrom: "other", af: null, dp: null, info: "" }
-      : {
-          name: String(s.name ?? ""),
-          chrom: s.chrom ?? "other",
-          af: typeof s.af === "number" ? s.af : null,
-          dp: Number.isInteger(s.dp) ? s.dp : null,
-          info: s.info ?? "",
-        }
-  );
+// normalizeSkills already exists (added in Task 1) — do not add a second copy.
+
+export function normalizePdb(id) {
+  if (id == null) return null;
+  const s = String(id).toUpperCase();
+  if (/^[0-9][A-Z0-9]{3}$/.test(s)) return s;
+  console.warn(`[publications] ignoring malformed pdb id: ${id}`);
+  return null;
 }
 
 export function normalizeTimeline(tl) {
@@ -470,6 +542,13 @@ test("chromosomeOf: NGS keywords win over AI keywords, override wins over both",
   assert.equal(chromosomeOf(repo("d", "tmux over tailnet", ["tmux"]), { d: { chromosome: "chrAI" } }), "chrAI");
 });
 
+test("chromosomeOf: keywords match whole words only (regression: 'ica' inside 'technical')", () => {
+  const fieldrag = repo("fieldrag-v3", "Grounded RAG and agent system for technical field-support QA, with a diagnostic evaluation harness", ["bm25", "evaluation", "llm", "mistral", "rag"]);
+  assert.equal(chromosomeOf(fieldrag), "chrAI");
+  assert.equal(chromosomeOf(repo("s", "average storage of fragments", ["misc"])), "chrInfra");
+  assert.equal(chromosomeOf(repo("s", "runs ICA uploads nightly", [])), "chrNGS");
+});
+
 test("exonsOf: splits description on separators, caps at 6, falls back to name", () => {
   assert.deepEqual(exonsOf(repo("r", "RAG with citations, guarded tools; eval harness + OTel — K8s: Helm")),
     ["RAG with citations", "guarded tools", "eval harness", "OTel", "K8s", "Helm"]);
@@ -477,6 +556,9 @@ test("exonsOf: splits description on separators, caps at 6, falls back to name",
   assert.deepEqual(exonsOf(repo("solo", "one sentence only")), ["solo"]);
   assert.deepEqual(exonsOf(repo("solo", null)), ["solo"]);
   assert.deepEqual(exonsOf(repo("r", "x, y"), { r: { exons: ["custom"] } }), ["custom"]);
+  const long = exonsOf(repo("r", "short, a very long clause that keeps going well past the label budget"));
+  assert.equal(long[1].length, 26);
+  assert.ok(long[1].endsWith("…"));
 });
 
 test("langColorKey maps languages to nucleotide keys", () => {
@@ -510,6 +592,15 @@ test("layoutGenes places genes in order without overlap inside totalKb", () => {
   assert.ok(Math.abs((out[0].x1 - out[0].x0) - (8 + 2 * 4.5)) < 1e-9);
 });
 
+test("layoutGenes shrinks genes to fit when they exceed the track", () => {
+  const six = ["1", "2", "3", "4", "5", "6"];
+  const out = layoutGenes(Array.from({ length: 8 }, (_, i) => ({ name: `g${i}`, exons: six })), 100);
+  for (let i = 0; i < out.length; i++) {
+    assert.ok(out[i].x0 >= 0 && out[i].x1 <= 100, `gene ${i} inside track`);
+    if (i) assert.ok(out[i].x0 - out[i - 1].x1 >= 2 - 1e-9, `gap before gene ${i}`);
+  }
+});
+
 test("truncateToWidth cuts to the number of characters that fit", () => {
   assert.equal(truncateToWidth("abcdefghij", 6.9 * 5), "abcd…");
   assert.equal(truncateToWidth("abc", 100), "abc");
@@ -540,16 +631,17 @@ const NGS_KEYS = ["bioinformatics", "ica", "illumina", "dragen", "ngs", "clinica
 const AI_KEYS = ["rag", "llm", "agent", "ai-safety", "evaluation", "mistral", "genai"];
 export const CHROMOSOMES = ["chrAI", "chrNGS", "chrInfra"];
 
-function repoText(repo) {
-  return [...(repo.topics || []), repo.description || ""].join(" ").toLowerCase();
+function hasKeyword(repo, keys) {
+  const topics = (repo.topics || []).map((x) => String(x).toLowerCase());
+  const desc = String(repo.description || "").toLowerCase();
+  return keys.some((k) => topics.includes(k) || new RegExp(`(^|[^a-z0-9])${k.replace(/[-.]/g, "\\$&")}([^a-z0-9]|$)`).test(desc));
 }
 
 export function chromosomeOf(repo, overrides = {}) {
   const forced = overrides?.[repo.name]?.chromosome;
   if (CHROMOSOMES.includes(forced)) return forced;
-  const text = repoText(repo);
-  if (NGS_KEYS.some((k) => text.includes(k))) return "chrNGS";
-  if (AI_KEYS.some((k) => text.includes(k))) return "chrAI";
+  if (hasKeyword(repo, NGS_KEYS)) return "chrNGS";
+  if (hasKeyword(repo, AI_KEYS)) return "chrAI";
   return "chrInfra";
 }
 
@@ -561,7 +653,7 @@ export function exonsOf(repo, overrides = {}) {
     .map((s) => s.trim())
     .filter(Boolean);
   if (parts.length <= 1) return [repo.name];
-  return parts.slice(0, 6);
+  return parts.slice(0, 6).map((s) => truncateToWidth(s, 180)); // ≤26 chars per exon label
 }
 
 export function langColorKey(language) {
@@ -590,9 +682,11 @@ export function timelineScale(items, now) {
   return { t0, t1: now.getFullYear() + 1 };
 }
 
-export function layoutGenes(genes, totalKb = 100) {
-  const lens = genes.map((g) => 8 + g.exons.length * 4.5);
-  const sum = lens.reduce((a, b) => a + b, 0);
+export function layoutGenes(genes, totalKb = 100, minGap = 2) {
+  let lens = genes.map((g) => 8 + g.exons.length * 4.5);
+  let sum = lens.reduce((a, b) => a + b, 0);
+  const room = Math.max(totalKb * 0.5, totalKb - minGap * (genes.length + 1)); // never let gaps eat the whole track
+  if (sum > room) { const k = room / sum; lens = lens.map((l) => l * k); sum = room; } // shrink to fit, keep min gaps
   const gap = (totalKb - sum) / (genes.length + 1);
   let pos = gap;
   return genes.map((g, i) => {
@@ -639,10 +733,10 @@ git commit -m "feat(logic): chromosome/exon mapping, period parsing, gene layout
 - Modify: `tests/mapping.test.mjs`
 
 **Interfaces:**
-- Produces: `buildRunLog(content, repos, now, lang) → Array<{date:string, level:"PRE"|"INFO"|"MARK"|"NOTE", text:string}>` sorted ascending by `date` (`YYYY-MM-DD`). Uses `pick()` from the same module for bilingual fields.
+- Produces: `buildRunLog(content, repos, now, lang, labels = LOG_LABELS_EN) → Array<{date:string, level:"PRE"|"INFO"|"MARK"|"NOTE", text:string}>` sorted ascending by `date` (`YYYY-MM-DD`). Uses `pick()` for bilingual fields; every fixed word comes from `labels` (`{pre, started, lane, index, peak, first, qc, cluster, pushed}`) so the view can pass translated strings. `LOG_LABELS_EN` is exported.
 - Rules (from spec §Run log): experience start → `INFO` "Lane switch · {org} · {title}" (first one after `career_start` says "Run started"; entries starting before `career_start` are `PRE`); education → `MARK` "Index read complete · {degree}"; publications → `MARK` "Peak called · {venue}{ · First author}" dated `{year}-07-01`; `profile.award` → `NOTE` "QC flag · {award}" dated `{year}-12-01`; newest repo (max `pushed_at`) → `INFO` "Cluster PF · {name} pushed" dated from `pushed_at`.
 
-- [ ] **Step 1: Write the failing test** (append to `tests/mapping.test.mjs`; add `buildRunLog` to the import)
+- [ ] **Step 1: Write the failing test** (append to `tests/mapping.test.mjs`; add `buildRunLog` and `LOG_LABELS_EN` to the import)
 
 ```js
 test("buildRunLog merges sources, marks pre-career entries, sorts ascending", () => {
@@ -665,6 +759,12 @@ test("buildRunLog merges sources, marks pre-career entries, sorts ascending", ()
   assert.equal(log[2].text, "Peak called · NAR · First author");
   assert.equal(log[6].text, "Cluster PF · newest pushed");
 });
+
+test("buildRunLog uses the supplied labels", () => {
+  const content = { profile: { career_start: "2015.03" }, experience: [{ period: "2015.03 – Present", title: { en: "R" }, org: { en: "O" } }] };
+  const log = buildRunLog(content, [], new Date(2026, 8, 9), "en", { ...LOG_LABELS_EN, started: "런 시작" });
+  assert.equal(log[0].text, "런 시작 · O · R");
+});
 ```
 
 - [ ] **Step 2: Run and confirm failure**
@@ -680,7 +780,9 @@ function ymToDate(text, day = "01") {
   return m ? `${m[1]}-${m[2]}-${day}` : null;
 }
 
-export function buildRunLog(content, repos, now, lang) {
+export const LOG_LABELS_EN = { pre: "Pre-run", started: "Run started", lane: "Lane switch", index: "Index read complete", peak: "Peak called", first: "First author", qc: "QC flag", cluster: "Cluster PF", pushed: "pushed" };
+
+export function buildRunLog(content, repos, now, lang, labels = LOG_LABELS_EN) {
   const out = [];
   const careerStart = fractionalYear(content.profile?.career_start || "") ?? -Infinity;
   const exp = (content.experience || [])
@@ -692,26 +794,26 @@ export function buildRunLog(content, repos, now, lang) {
     const date = ymToDate(String(x.period).split(/\s*[–-]\s*/)[0]);
     const org = pick(x.org, lang).split(",")[0];
     if (p.start < careerStart) {
-      out.push({ date, level: "PRE", text: `Pre-run · ${org} · ${pick(x.title, lang)}` });
+      out.push({ date, level: "PRE", text: `${labels.pre} · ${org} · ${pick(x.title, lang)}` });
     } else if (!started) {
       started = true;
-      out.push({ date, level: "INFO", text: `Run started · ${org} · ${pick(x.title, lang)}` });
+      out.push({ date, level: "INFO", text: `${labels.started} · ${org} · ${pick(x.title, lang)}` });
     } else {
-      out.push({ date, level: "INFO", text: `Lane switch · ${org} · ${pick(x.title, lang)}` });
+      out.push({ date, level: "INFO", text: `${labels.lane} · ${org} · ${pick(x.title, lang)}` });
     }
   }
   for (const e of content.education || []) {
     const date = ymToDate(e.period);
-    if (date) out.push({ date, level: "MARK", text: `Index read complete · ${pick(e.degree, lang)}` });
+    if (date) out.push({ date, level: "MARK", text: `${labels.index} · ${pick(e.degree, lang)}` });
   }
   for (const p of content.publications || []) {
     const first = /first/i.test(p.authors || "");
-    out.push({ date: `${p.year}-07-01`, level: "MARK", text: `Peak called · ${p.venue}${first ? " · First author" : ""}` });
+    out.push({ date: `${p.year}-07-01`, level: "MARK", text: `${labels.peak} · ${p.venue}${first ? ` · ${labels.first}` : ""}` });
   }
   const award = content.profile?.award;
-  if (award?.year) out.push({ date: `${award.year}-12-01`, level: "NOTE", text: `QC flag · ${pick(award, lang)}` });
+  if (award?.year) out.push({ date: `${award.year}-12-01`, level: "NOTE", text: `${labels.qc} · ${pick(award, lang)}` });
   const newest = (repos || []).slice().sort((a, b) => (b.pushed_at || "").localeCompare(a.pushed_at || ""))[0];
-  if (newest?.pushed_at) out.push({ date: newest.pushed_at.slice(0, 10), level: "INFO", text: `Cluster PF · ${newest.name} pushed` });
+  if (newest?.pushed_at) out.push({ date: newest.pushed_at.slice(0, 10), level: "INFO", text: `${labels.cluster} · ${newest.name} ${labels.pushed}` });
   return out.sort((a, b) => a.date.localeCompare(b.date));
 }
 ```
@@ -750,7 +852,7 @@ git commit -m "feat(logic): buildRunLog for the run monitor view"
 
 ```html
 <div class="topbar" id="topbar">
-  <a class="brand" href="index.html">jae.genome <small id="build-label"></small></a>
+  <a class="brand" href="index.html?view=browser">jae.genome <small id="build-label"></small></a>
   <nav class="views" aria-label="View">
     <a data-view="browser" href="index.html?view=browser" aria-current="page">Browser</a>
     <a data-view="run" href="run.html">Run monitor</a>
@@ -842,7 +944,7 @@ function renderTopbarText() {
 function renderTopbar({ view, showLocus, showTheme }) {
   const bar = document.getElementById("topbar");
   const brand = el("a", "brand", "jae.genome ");
-  brand.href = "index.html";
+  brand.href = "index.html?view=browser"; // never bounce through the stored-view redirect
   brand.appendChild(el("small", null, state.updatedAt ? `hg-jae · build ${state.updatedAt.slice(0, 7).replace("-", ".")}` : "hg-jae"));
   const views = el("nav", "views");
   views.setAttribute("aria-label", "View");
@@ -936,6 +1038,7 @@ Note: `exclude_repos` filtering was previously done in `scripts/transform.mjs` a
 .hintbar { display: flex; gap: 12px; align-items: center; padding: 6px 20px; font-family: var(--mono); font-size: 12px; color: var(--tb-muted); background: var(--tb-paper); border-bottom: 1px solid var(--tb-rule); }
 .hintbar button { font: inherit; background: none; border: 0; color: var(--tb-accent); cursor: pointer; padding: 0; }
 .load-error { font-family: var(--sans); padding: 24px; }
+[hidden] { display: none !important; } /* author display rules above must not defeat the hidden attribute */
 @media (max-width: 760px) { .topbar { gap: 10px; padding: 8px 12px; } .topbar .locus input { width: 130px; } .topbar .brand small { display: none; } }
 ```
 
@@ -969,11 +1072,10 @@ git commit -m "feat(shell): shared data loader, top bar, view/lang/theme persist
 **Files:**
 - Rename: `index.html` → `classic.html` (`git mv`)
 - Modify: `classic.html` (title, canonical, nav)
-- Modify: `assets/js/main.js:98-104` (`renderSkills`), `assets/js/main.js` `init()`
+- Modify: `assets/js/main.js` `init()`
 - Modify: `assets/css/style.css:194-215` (`.toggles`)
 
 **Interfaces:**
-- Consumes: `normalizeSkills` from `logic.mjs`.
 - Classic keeps its own `main.js` state and toggles; it only writes `localStorage.view = "classic"` when its view links are clicked, and shows links to the other two views inside the existing floating nav.
 
 - [ ] **Step 1: Rename and edit `classic.html`**
@@ -993,18 +1095,7 @@ In `classic.html`:
 
 - [ ] **Step 2: Edit `assets/js/main.js`**
 
-Import `normalizeSkills` (add to the import list from `./logic.mjs`). Replace `renderSkills`:
-
-```js
-function renderSkills() {
-  const wrap = document.getElementById("skill-list");
-  wrap.replaceChildren(
-    ...normalizeSkills(state.content.skills).map((s) => el("span", "skill-chip", s.name))
-  );
-}
-```
-
-In `init()`, right after the theme-toggle listener, add:
+(`renderSkills` already uses `normalizeSkills` since Task 1.) In `init()`, right after the theme-toggle listener, add:
 
 ```js
   document.querySelectorAll(".view-link").forEach((a) =>
@@ -1021,6 +1112,7 @@ In `init()`, right after the theme-toggle listener, add:
 ```css
 .toggle.view-link { text-decoration: none; color: var(--muted); }
 .toggle.view-link:hover { color: var(--accent); }
+@media (max-width: 620px) { .toggle { padding: 0.38rem 0.55rem; letter-spacing: 0.06em; } }
 ```
 
 - [ ] **Step 4: Verify**
@@ -1050,7 +1142,7 @@ git commit -m "feat(classic): move bento page to classic.html with view switch"
 **Interfaces:**
 - Consumes: `boot`, `state`, `t`, `pk`, `el`, `onLang`, `showLoadError` from `shell.mjs`; `normalizeSkills` from `logic.mjs`.
 - Produces: DOM ids used by Tasks 8–10: `#helix`, `#ticker`, `#helix-cap`, `#genes`, `#coverage`, `#peaks`, `#edu`, `#popup`, `#drawer` (+ children listed in Task 10), section ids `about projects experience publications education skills contact`.
-- `ideogram.mjs` exports `initIdeogram(sections, { reduce })` where `sections = [{id, label, weight}]`; it draws into `#ideo`, tracks scroll, and wires `#locus-form`.
+- `ideogram.mjs` exports `initIdeogram(sections, { reduce }) → { dispose() }` where `sections = [{id, label, weight}]`; it draws into `#ideo`, tracks scroll, and wires `#locus-form`. `dispose()` disconnects the observer and the submit listener so a language re-render can rebuild it without leaks.
 - `index.js` exports nothing; it defines `renderAll()` and registers it with `onLang`.
 
 - [ ] **Step 1: Write `index.html`**
@@ -1073,6 +1165,7 @@ git commit -m "feat(classic): move bento page to classic.html with view switch"
   <link rel="stylesheet" href="assets/css/base.css" />
   <link rel="stylesheet" href="assets/css/browser.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>" />
+  <script>try{var th=localStorage.getItem("theme");if(th==="dark"||th==="light")document.documentElement.dataset.theme=th;}catch(e){}</script>
 </head>
 <body>
   <a class="skip-link" href="#projects">Skip to projects</a>
@@ -1082,7 +1175,7 @@ git commit -m "feat(classic): move bento page to classic.html with view switch"
   <main class="wrap">
     <section class="hero" id="about">
       <div>
-        <p class="eyebrow" id="hero-eyebrow">chrAbout · p-arm · 1 gene</p>
+        <p class="eyebrow" id="hero-eyebrow" data-i18n="hero_eyebrow"></p>
         <h1 id="hero-name"></h1>
         <p class="tagline" id="hero-tagline"></p>
         <p class="intro" id="hero-intro"></p>
@@ -1127,6 +1220,7 @@ git commit -m "feat(classic): move bento page to classic.html with view switch"
     <section class="track" id="contact">
       <div class="track-head"><h2 data-i18n="heading_contact"></h2><span class="meta" id="contact-meta"></span></div>
       <div class="export" id="export"></div>
+      <div class="chips footer-views" id="footer-views"></div>
       <p class="track-note" id="footer-updated"></p>
     </section>
   </main>
@@ -1162,11 +1256,11 @@ Copy the `<style>` block of `docs/design/genome-browser-mockup.html` **from the 
    :root[data-theme="dark"]{ --paper:#0f1319; --surface:#161b23; --ink:#e7eaef; --body:#c3c9d2; --muted:#8b94a1; --rule:#2a313c; --rule-soft:#1f2530;
      --nA:#4cbf78; --nC:#5f93ea; --nG:#f0b247; --nT:#ea6b6b; --nN:#6f7884; --band1:#2c333d; --band2:#4a535e; --band3:#9aa3ae; --track-head:#131820; --hover:#1b212b; --shadow:0 12px 32px rgba(0,0,0,.5); }
    ```
-3. Change `.ideo{… top:49px}` to `top:var(--topbar-h,49px)` and add `.hintbar ~ .ideo{top:calc(var(--topbar-h,49px) + 31px)}` so the hint bar does not overlap it. Add `html{scroll-padding-top:120px}`.
-4. Change `.hidden{display:none!important}` to `[hidden]{display:none!important}` (the view code uses the `hidden` attribute).
-5. Add `body{font-family:var(--sans)}` uses `--sans` from `base.css` (already includes Noto Sans KR); add `.skip-link{position:absolute;left:-999px} .skip-link:focus{left:12px;top:60px;background:var(--surface);padding:8px;z-index:50}`.
+3. Change `.ideo{… top:49px}` to `top:var(--topbar-h,49px)` and add `.hintbar:not([hidden]) ~ .ideo{top:calc(var(--topbar-h,49px) + 31px)}` so a visible hint bar does not overlap it (the bar stays in the DOM when dismissed, so the selector must be state-aware). Add `html{scroll-padding-top:120px}`.
+4. Delete the mockup's `.hidden{display:none!important}` rule (base.css already provides `[hidden]{display:none!important}`) and delete the copied `--mono`, `--sans`, `--disp` declarations from `:root` — base.css defines them with `"Noto Sans KR"` in the stack and browser.css must not override them.
+5. Keep `body{font-family:var(--sans)}` (resolves to base.css's stack, which includes Noto Sans KR); add `.skip-link{position:absolute;left:-999px} .skip-link:focus{left:12px;top:60px;background:var(--surface);padding:8px;z-index:50}`.
 6. Add `.table-body{padding:0 0 4px} @media (max-width:600px){ .info-col, table.vcf td:nth-child(6){display:none} .ideo text{display:none} .ideo text.current{display:block} }`.
-7. Add `.popup{position:fixed}` override (the popup is positioned with viewport coordinates in Task 9) and `.drawer .side .x{cursor:pointer;background:none;border:0}`.
+7. Add `.footer-views{padding:0 16px 14px;align-items:center} .footer-views .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:4px}`; add `.popup{position:fixed}` override (the popup is positioned with viewport coordinates in Task 9) and `.drawer .side .x{cursor:pointer;background:none;border:0}`.
 
 - [ ] **Step 3: Write `assets/js/browser/ideogram.mjs`**
 
@@ -1178,6 +1272,7 @@ const SHADES = ["var(--band1)", "var(--band2)", "var(--band1)", "var(--band3)", 
 export function initIdeogram(sections, { reduce }) {
   const svg = document.getElementById("ideo");
   svg.replaceChildren();
+  const disposers = [];
   const total = sections.reduce((s, x) => s + x.weight, 0);
   let x = 0;
   const labels = new Map();
@@ -1209,25 +1304,30 @@ export function initIdeogram(sections, { reduce }) {
     });
   }, { rootMargin: "-45% 0px -50% 0px" });
   sections.forEach((s) => io.observe(document.getElementById(s.id)));
+  disposers.push(() => io.disconnect());
 
   const form = document.getElementById("locus-form");
-  form?.addEventListener("submit", (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
     const v = input.value.toLowerCase().replace(/^chr/, "");
     const s = sections.find((s) => s.label.toLowerCase().startsWith(v.slice(0, 4)) || s.id.startsWith(v.slice(0, 4)));
     if (s) document.getElementById(s.id).scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
-  });
+  };
+  form?.addEventListener("submit", onSubmit);
+  disposers.push(() => form?.removeEventListener("submit", onSubmit));
+  return { dispose() { disposers.forEach((fn) => fn()); } };
 }
 ```
 
 - [ ] **Step 4: Write `assets/js/browser/index.js`** (hero, chips, skills table, contact, wiring; track/helix/structure calls are added in Tasks 8–10 at the marked lines)
 
 ```js
-import { boot, state, t, pk, el, onLang, showLoadError } from "../shell.mjs";
-import { normalizeSkills } from "../logic.mjs";
+import { boot, state, t, pk, el, onLang, showLoadError, viewHref } from "../shell.mjs";
+import { normalizeSkills, VIEWS } from "../logic.mjs";
 import { initIdeogram } from "./ideogram.mjs";
 
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let ideogram = null;
 const SECTION_WEIGHTS = { about: 110, projects: 260, experience: 190, publications: 150, education: 90, skills: 120, contact: 80 };
 
 function link(text, href, className = "chip") {
@@ -1279,6 +1379,12 @@ function renderContact() {
   for (const l of contact.links) cards.push(card(l.label.toLowerCase(), l.url.replace(/^https?:\/\/(www\.)?/, ""), l.url));
   document.getElementById("export").replaceChildren(...cards);
   document.getElementById("footer-updated").textContent = state.updatedAt ? `${t("footer_updated")}: ${state.updatedAt.slice(0, 10)}` : "";
+  const views = document.getElementById("footer-views");
+  views.replaceChildren(el("span", "k", t("footer_views")), ...VIEWS.filter((v) => v !== "browser").map((v) => {
+    const a = el("a", "chip", t(`view_${v}`)); a.href = viewHref(v); // same tab, and remember the choice like the top bar does
+    a.addEventListener("click", () => { try { localStorage.setItem("view", v); } catch { /* ignore */ } });
+    return a;
+  }));
 }
 
 function applyStaticText() {
@@ -1298,7 +1404,8 @@ function renderAll() {
   renderSkillsTable();
   renderContact();
   // TASK 9: renderTracks() is called here
-  initIdeogram(visibleSections(), { reduce });
+  ideogram?.dispose();
+  ideogram = initIdeogram(visibleSections(), { reduce });
 }
 
 async function init() {
@@ -1431,14 +1538,14 @@ git commit -m "feat(browser): canvas helix hero with motif ticker"
 - Modify: `assets/js/browser/index.js` (replace the `// TASK 9` comment)
 
 **Interfaces:**
-- Consumes: `groupByChromosome`, `layoutGenes`, `parsePeriod`, `timelineScale`, `truncateToWidth` from `logic.mjs`; `state`, `t`, `pk`, `el` from `shell.mjs`.
+- Consumes: `groupByChromosome`, `layoutGenes`, `parsePeriod`, `timelineScale`, `truncateToWidth`, `normalizePdb`, `repoDescription` from `logic.mjs`; `state`, `t`, `pk`, `el` from `shell.mjs`.
 - Produces: `renderTracks({ reduce, onPeak })` where `onPeak(publication)` is supplied by Task 10 (until then, pass `() => {}`). Draws into `#genes`, `#coverage`, `#peaks`, `#edu`, fills `#projects-meta`, `#projects-note`, `#lang-legend`, `#experience-meta`, `#publications-meta`, `#egg-hint`, `#education-meta`, and manages the `#popup`.
 - Shared constants exported for tests/other modules: `TL = 120`, `TR = 1080`.
 
 - [ ] **Step 1: Write `assets/js/browser/tracks.mjs`**
 
 ```js
-import { groupByChromosome, layoutGenes, parsePeriod, timelineScale, truncateToWidth, repoDescription } from "../logic.mjs";
+import { groupByChromosome, layoutGenes, parsePeriod, timelineScale, truncateToWidth, repoDescription, normalizePdb } from "../logic.mjs";
 import { state, t, pk, el } from "../shell.mjs";
 
 const NS = "http://www.w3.org/2000/svg";
@@ -1462,6 +1569,9 @@ function renderGenes() {
   if (!repos) {
     svg.setAttribute("viewBox", "0 0 1100 60");
     svg.appendChild(text({ x: TL, y: 30, class: "genelbl" }, t("projects_fallback")));
+    const a = svgEl("a", { href: "https://github.com/woongjaejung", target: "_blank", rel: "noopener" });
+    a.appendChild(text({ x: TL, y: 50, class: "genelbl", "text-decoration": "underline" }, "github.com/woongjaejung"));
+    svg.appendChild(a);
     document.getElementById("projects-meta").textContent = "";
     note.textContent = "";
     return;
@@ -1576,7 +1686,7 @@ function renderCoverage(t0, t1, tx) {
     const anchor = last ? "end" : first ? "start" : "middle", ax = last ? x1 : first ? x0 : cx;
     svg.appendChild(svgEl("line", { x1: cx, x2: cx, y1: base - (i + 1) * unit, y2: ly - 14, stroke: "var(--rule)", "stroke-dasharray": "2 3" }));
     svg.appendChild(text({ x: ax, y: ly, class: "covlbl", "text-anchor": anchor }, pk(x.title)));
-    const meta = [x.period, pk(x.org).split(",")[0], x.note ? pk(x.note) : null].filter(Boolean).join(" · ");
+    const meta = [x.period, pk(x.org).split(",")[0]].join(" · ");
     svg.appendChild(text({ x: ax, y: ly + 14, class: "covmeta", "text-anchor": anchor }, meta));
   });
 }
@@ -1600,7 +1710,9 @@ function renderPeaks(t0, t1, tx, onPeak) {
     const label = text({ x: x + 24, y: y + 2, class: "peaklbl" }, truncateToWidth(p.title, TR - x - 24));
     const full = svgEl("title"); full.textContent = p.title; label.appendChild(full);
     g.appendChild(label);
-    g.appendChild(text({ x: x + 24, y: y + 16, class: "peakmeta" }, [p.year, p.venue, p.authors, p.pdb ? `PDB ${p.pdb}` : null].filter(Boolean).join(" · ")));
+    const pdb = normalizePdb(p.pdb);
+    const meta = [p.year, p.venue, p.authors, pdb ? `PDB ${pdb}` : null].filter(Boolean).join(" · ");
+    g.appendChild(text({ x: x + 24, y: y + 16, class: "peakmeta" }, truncateToWidth(meta, TR - x - 24, 6.3)));
     button(g, p.title, () => onPeak(p));
     svg.appendChild(g);
   });
@@ -1618,7 +1730,7 @@ function renderMarkers(t0, t1, tx) {
   svg.appendChild(svgEl("line", { x1: TL, x2: TR, y1: y, y2: y, stroke: "var(--rule-soft)" }));
   items.forEach(({ e, p }, i) => {
     const x = tx(p.start);
-    const crowded = i > 0 && p.start - items[i - 1].p.start < 2 && !(items[i - 1].dy);
+    const crowded = i > 0 && p.start - items[i - 1].p.start <= 2 && !(items[i - 1].dy);
     const dy = crowded ? 32 : 0; items[i].dy = dy;
     const last = i === items.length - 1;
     svg.appendChild(svgEl("line", { x1: x, x2: x, y1: y + dy, y2: y - 16, stroke: "var(--nA)", "stroke-width": 1.5 }));
@@ -1645,6 +1757,7 @@ document.addEventListener("click", (e) => { const p = document.getElementById("p
 - [ ] **Step 2: Wire it in `assets/js/browser/index.js`**
 
 Add `import { renderTracks } from "./tracks.mjs";` and replace the `// TASK 9` line with `renderTracks({ onPeak: (p) => openStructure(p) });` and, until Task 10 lands, add near the top of the file: `let openStructure = () => {};` (Task 10 replaces this with the real import).
+- Expected screenshot detail: the 2013 and 2015 degree labels sit on different lines (their starts are exactly 2 years apart, which counts as crowded).
 
 - [ ] **Step 3: Verify**
 
@@ -1673,6 +1786,7 @@ git commit -m "feat(browser): gene, coverage, peak and marker tracks with gene p
 
 ```js
 import { state, t, pk, el } from "../shell.mjs";
+import { normalizePdb } from "../logic.mjs";
 
 const LIB = "https://cdn.jsdelivr.net/npm/3dmol@2.5.5/build/3Dmol-min.js";
 const pdbCache = new Map();
@@ -1714,6 +1828,7 @@ export function closeStructure() {
 }
 
 export async function openStructure(p) {
+  const pdb = normalizePdb(p.pdb);
   const d = document.getElementById("drawer");
   returnTo = document.activeElement;
   d.hidden = false;
@@ -1724,23 +1839,23 @@ export async function openStructure(p) {
   document.getElementById("d-role").textContent = p.authors || "";
   document.getElementById("d-blurb").textContent = pk(p.blurb);
   const doi = document.getElementById("d-doi"); doi.href = p.link || "#"; doi.textContent = "DOI"; doi.hidden = !p.link;
-  const rcsb = document.getElementById("d-rcsb"); rcsb.hidden = !p.pdb; if (p.pdb) { rcsb.href = `https://www.rcsb.org/structure/${p.pdb}`; rcsb.textContent = `RCSB ${p.pdb}`; }
+  const rcsb = document.getElementById("d-rcsb"); rcsb.hidden = !pdb; if (pdb) { rcsb.href = `https://www.rcsb.org/structure/${pdb}`; rcsb.textContent = `RCSB ${pdb}`; }
   const kv = document.getElementById("d-kv");
-  kv.replaceChildren(el("span", null, "gene"), el("b", null, p.gene || "—"), el("span", null, "structure"), el("b", null, p.pdb || "—"), el("span", null, "render"), el("b", null, "cartoon · spectrum"));
+  kv.replaceChildren(el("span", null, "gene"), el("b", null, p.gene || "—"), el("span", null, "structure"), el("b", null, pdb || "—"), el("span", null, "render"), el("b", null, "cartoon · spectrum"));
   document.getElementById("dclose").focus();
   const hud = document.getElementById("hud");
   hud.textContent = "";
   if (viewer) { viewer.clear(); viewer.render(); }
-  if (!p.pdb) { setLoading(t("structure_none")); return; }
+  if (!pdb) { setLoading(t("structure_none")); return; }
 
   setLoading(t("structure_loading"));
   try { await loadLib(); } catch { setLoading(t("structure_lib_failed")); return; }
-  let pdb;
-  try { pdb = await fetchPdb(p.pdb); } catch { setLoading(t("structure_fetch_failed")); return; }
+  let pdbText;
+  try { pdbText = await fetchPdb(pdb); } catch { setLoading(t("structure_fetch_failed")); return; }
   if (d.hidden) return; // closed while loading
   if (!viewer) viewer = $3Dmol.createViewer(document.getElementById("stage"), { backgroundColor: "#0b1118" });
   viewer.clear();
-  viewer.addModel(pdb, "pdb");
+  viewer.addModel(pdbText, "pdb");
   viewer.setStyle({}, {});
   viewer.setStyle({ chain: p.pdb_chain || "A" }, { cartoon: { color: "spectrum" } });
   viewer.setStyle({ resn: ["DA", "DT", "DG", "DC"] }, { stick: { radius: 0.22, colorscheme: "whiteCarbon" } });
@@ -1749,19 +1864,19 @@ export async function openStructure(p) {
   viewer.render();
   setLoading("");
   if (!reduceMotion) viewer.spin("y", 0.35);
-  hud.textContent = `${p.pdb} · ${p.gene} · ${t("structure_hint")}`;
+  hud.textContent = `${pdb} · ${p.gene} · ${t("structure_hint")}`;
 }
 ```
 
 - [ ] **Step 2: Wire it in `assets/js/browser/index.js`**
 
-Remove the `let openStructure = () => {};` stub. Add `import { initStructureDrawer, openStructure } from "./structure.mjs";` and replace the `// TASK 10` line with `initStructureDrawer({ reduce });`. Also add a window resize hook is not needed — 3Dmol resizes with its container.
+Remove the `let openStructure = () => {};` stub. Add `import { initStructureDrawer, openStructure } from "./structure.mjs";` and replace the `// TASK 10` line with `initStructureDrawer({ reduce });`. No resize hook is needed — 3Dmol resizes with its container.
 
 - [ ] **Step 3: Verify (manual, real browser)**
 
 Open `http://localhost:8000/` in a browser. Click the CTCF peak → drawer opens, "loading 3D viewer…" then a rotating zinc-finger/DNA cartoon; HUD shows `5T0U · CTCF · drag to rotate · scroll to zoom`. Click the p53 peak → `1TUP` loads without a second script download (check the Network tab: one `3Dmol-min.js`, one `1TUP.pdb`). Click the RUNX3 peak → "No structure is linked to this paper." and no RCSB button. Esc closes and focus returns to the peak. With DevTools "Emulate prefers-reduced-motion: reduce" the structure does not spin.
 
-Headless check that nothing crashed at load: `--dump-dom http://localhost:8000/ | grep -c 'id="drawer" hidden'` → `1`.
+Headless check that nothing crashed at load: `--dump-dom http://localhost:8000/ | grep -c 'id="drawer"[^>]*hidden'` → `1`.
 
 - [ ] **Step 4: Commit**
 
@@ -1840,12 +1955,15 @@ Copy from `docs/design/genome-browser-mockup.html` every rule that starts with `
 3. `.lane .nm{overflow-wrap:anywhere}` (no `word-break`).
 4. Keep the `@media (prefers-reduced-motion: reduce)` block that disables `.status .dot`, `.status .bar i`, `.log .cur` animations and sets the bar width to 93%.
 5. Add `.log{max-height:520px;overflow:auto}`.
+6. Replace the mockup's `.rm-grid{…grid-template-columns:repeat(4,1fr)…}` with `.rm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:12px}` and delete its `@media (max-width:820px)` override — the tile count varies (3 or 4) and the grid must reflow at 390px without inline styles. Add `.flowcell .fallback{font-family:var(--sans);color:var(--rm-muted);margin:0}`.
 
 - [ ] **Step 3: Write `assets/js/run/index.js`**
 
 ```js
 import { boot, state, t, pk, el, onLang, showLoadError } from "../shell.mjs";
 import { groupByChromosome, normalizeTimeline, careerYears, runId, buildRunLog, repoDescription } from "../logic.mjs";
+
+const logLabels = () => ({ pre: t("log_pre"), started: t("log_started"), lane: t("log_lane"), index: t("log_index"), peak: t("log_peak"), first: t("log_first"), qc: t("log_qc"), cluster: t("log_cluster"), pushed: t("log_pushed") });
 
 const NS = "http://www.w3.org/2000/svg";
 const svgEl = (tag, attrs = {}) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
@@ -1862,9 +1980,9 @@ function renderHeader() {
   const sub = document.getElementById("run-sub");
   const kv = (k, v) => { const s = el("span", null, `${k} `); s.appendChild(el("b", null, v)); return s; };
   sub.replaceChildren(
-    kv(t("run_instrument"), "Field scientist, gen 3"),
-    kv(t("run_chemistry"), "Genomics + AI"),
-    kv(t("run_readlength"), "2 × 150 (EN/KO)"),
+    kv(t("run_instrument"), t("run_instrument_value")),
+    kv(t("run_chemistry"), t("run_chemistry_value")),
+    kv(t("run_readlength"), t("run_readlength_value")),
     kv(t("run_started"), `${profile.career_start.replace(".", "-")}-01 · ${t("run_yield_note")}`)
   );
   document.getElementById("run-status").textContent = t("run_status", { cycle: `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, "0")}` });
@@ -1884,20 +2002,19 @@ function renderTiles() {
   const c = state.content, pubs = c.publications || [];
   const first = pubs.filter((p) => /first/i.test(p.authors || "")).length;
   const tiles = [
-    tile(t("run_yield"), String(careerYears(c.profile.career_start, state.now)), "years", `${c.profile.career_start} → ${state.now.getFullYear()}.${String(state.now.getMonth() + 1).padStart(2, "0")} · ${t("run_yield_note")}`),
-    tile(t("run_clusters"), String(genes().length), "projects", t("run_clusters_note")),
-    tile(t("run_pubs"), String(pubs.length), "peer-reviewed", `${first} first-author · ${[...new Set(pubs.map((p) => p.venue))].join(", ")}`),
+    tile(t("run_yield"), String(careerYears(c.profile.career_start, state.now)), t("unit_years"), `${c.profile.career_start} → ${state.now.getFullYear()}.${String(state.now.getMonth() + 1).padStart(2, "0")} · ${t("run_yield_note")}`),
+    tile(t("run_clusters"), state.repos ? String(genes().length) : "—", t("unit_projects"), state.repos ? t("run_clusters_note") : t("projects_fallback")),
+    tile(t("run_pubs"), String(pubs.length), t("unit_peer_reviewed"), `${t("run_first_author", { n: first })} · ${[...new Set(pubs.map((p) => p.venue))].join(", ")}`),
   ];
   if (c.profile.award?.year) tiles.push(tile(t("run_qc"), "MVP", c.profile.award.year, pk(c.profile.award), "var(--rm-green)"));
-  const grid = document.getElementById("tiles");
-  grid.style.gridTemplateColumns = `repeat(${tiles.length}, 1fr)`;
-  grid.replaceChildren(...tiles);
+  document.getElementById("tiles").replaceChildren(...tiles); // column count comes from run.css (auto-fit)
 }
 
 function renderFlowcell() {
-  document.getElementById("flowcell-title").textContent = `${t("run_flowcell")} · ${genes().length} lanes`;
-  document.getElementById("flowcell-note").textContent = t("run_flowcell_note");
   const fc = document.getElementById("flowcell");
+  document.getElementById("flowcell-note").textContent = t("run_flowcell_note");
+  if (!state.repos) { document.getElementById("flowcell-title").textContent = t("run_flowcell"); fc.replaceChildren(el("p", "fallback", t("projects_fallback"))); return; }
+  document.getElementById("flowcell-title").textContent = `${t("run_flowcell")} · ${genes().length} ${t("unit_lanes")}`;
   fc.replaceChildren(...genes().map((g, i) => {
     const lane = el("a", "lane"); lane.href = g.html_url; lane.target = "_blank"; lane.rel = "noopener";
     const canvas = el("canvas"); lane.appendChild(canvas);
@@ -1951,11 +2068,11 @@ function renderLog() {
   const log = document.getElementById("log");
   log.replaceChildren();
   const cls = { PRE: "t", INFO: "ok", NOTE: "warn", MARK: "hl" };
-  for (const line of buildRunLog(state.content, state.repos, state.now, state.lang)) {
+  for (const line of buildRunLog(state.content, state.repos, state.now, state.lang, logLabels())) {
     log.append(el("span", "t", line.date), "  ", el("span", cls[line.level], line.level.padEnd(4)), "  ", `${line.text}\n`);
   }
   const today = state.now.toISOString().slice(0, 10);
-  log.append(el("span", "t", today), "  ", el("span", "ok", "INFO"), "  ", "Read 2 in progress ", el("span", "cur"));
+  log.append(el("span", "t", today), "  ", el("span", "ok", "INFO"), "  ", `${t("log_tail")} `, el("span", "cur"));
 }
 
 function renderAll() { renderHeader(); renderTiles(); renderFlowcell(); renderHeat(); renderSheet(); renderLog(); }
@@ -1972,7 +2089,7 @@ init().catch((err) => { console.error(err); showLoadError(); });
 - [ ] **Step 4: Verify**
 
 `timeout 40 /opt/google/chrome/chrome --headless=new --no-sandbox --disable-gpu --hide-scrollbars --window-size=1280,1900 --virtual-time-budget=4000 --screenshot=/tmp/claude-0/run.png http://localhost:8000/run.html`
-Expected: matches mockup v2 — Run ID `JAE-20150301`, Yield `11.5 years`, 9 lanes with faint dots and legible names, heatmap with Korean/English labels, sample sheet, log starting with a `PRE` line. `--dump-dom … | grep -c 'theme-toggle" class="tb-toggle" hidden'` → `1`.
+Expected: matches mockup v2 — Run ID `JAE-20150301`, Yield `11.5 years`, 9 lanes with faint dots and legible names, heatmap with Korean/English labels, sample sheet, log starting with a `PRE` line. `--dump-dom … | grep -c 'id="theme-toggle"[^>]*hidden'` → `1` (attribute order is class, id, type, hidden).
 
 - [ ] **Step 5: Commit**
 
@@ -2033,7 +2150,7 @@ for p in index run classic; do for w in 1280 390; do
 done; done
 ```
 
-Look at each image. Pass criteria: no overlapping labels, no text clipped at an SVG edge, tracks scroll horizontally at 390 instead of overflowing the page, hero stacks at 390, top bar fits at 390.
+Look at each image. Pass criteria: no overlapping labels, no text clipped at an SVG edge (peak title and meta lines both end inside the track), tracks scroll horizontally at 390 instead of overflowing the page, hero stacks at 390, top bar fits at 390, run-monitor tiles reflow to two per row at 390, classic nav pills fit at 390.
 
 - [ ] **Step 4: Manual checks in a real browser** (tick each)
 
@@ -2059,3 +2176,4 @@ Then use superpowers:finishing-a-development-branch to merge `redesign/genome-br
 - Spec coverage: shell/top bar (T5), classic move (T6), browser sections incl. ideogram, hero, tracks, skills, contact (T7–T9), structure drawer with all four error states (T10), run monitor with tiles/flowcell/heat/sheet/log (T11), data schema + i18n keys (T1), pure functions + tests (T2–T4), README (T12). The spec's hint bar and `?view=browser` override live in T5.
 - Names used across tasks: `boot/state/t/pk/el/onLang/showLoadError/viewHref` (T5) ↔ T7/T11; `groupByChromosome/layoutGenes/parsePeriod/timelineScale/truncateToWidth` (T3) ↔ T9; `normalizeTimeline/careerYears/runId` (T2) + `buildRunLog` (T4) ↔ T11; `renderTracks({onPeak})` (T9) ↔ `openStructure` (T10); `initIdeogram(sections,{reduce})` (T7).
 - Known simplification: the mockup's blocking mode gate is intentionally not built (spec decision).
+- Revised 2026-09-09 after an independent pre-implementation review (22 findings): `[hidden]` rule moved to base.css; keyword matching is whole-word/exact-topic; `layoutGenes` shrinks to fit; `normalizeSkills` + main.js change moved into Task 1 so the branch never renders `[object Object]`; run-log and tile words are i18n; peak meta truncated; education crowding uses `<= 2`; tile grid reflows via CSS; brand link bypasses the redirect; ideogram re-init disposes observers; verification greps fixed; exon labels capped and overrides supplied; flowcell fallback; hero eyebrow and footer view links are i18n; inline theme script prevents the light flash; `normalizePdb` guards malformed ids.

@@ -4,6 +4,7 @@ import {
   translate,
   repoDescription,
   pick,
+  normalizeSkills,
 } from "./logic.mjs";
 
 const state = { lang: "en", theme: "dark", content: null, repos: null, updatedAt: null };
@@ -46,9 +47,9 @@ function storeTheme(theme) {
   }
 }
 
-function setTheme(theme) {
+function setTheme(theme, persist = true) {
   state.theme = theme;
-  storeTheme(theme);
+  if (persist) storeTheme(theme);
   document.documentElement.dataset.theme = theme;
   applyToggleLabels();
 }
@@ -98,7 +99,7 @@ function applyStaticText() {
 function renderSkills() {
   const wrap = document.getElementById("skill-list");
   wrap.replaceChildren(
-    ...state.content.skills.map((s) => el("span", "skill-chip", s))
+    ...normalizeSkills(state.content.skills).map((s) => el("span", "skill-chip", s.name))
   );
 }
 
@@ -312,7 +313,12 @@ async function init() {
     .addEventListener("click", () =>
       setTheme(state.theme === "dark" ? "light" : "dark")
     );
-  setTheme(resolveInitialTheme(readStoredTheme()));
+  document.querySelectorAll(".view-link").forEach((a) =>
+    a.addEventListener("click", () => {
+      try { localStorage.setItem("view", a.dataset.view); } catch { /* ignore */ }
+    })
+  );
+  setTheme(resolveInitialTheme(readStoredTheme()), false);
 
   state.content = await loadJSON("data/content.json");
   try {

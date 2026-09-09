@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-view="run">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Woongjae (Jae) Jung — Run monitor</title>
+  <meta name="description" content="Career of Woongjae (Jae) Jung shown as a sequencing run: lanes, cycles, sample sheet." />
+  <meta name="theme-color" content="#06090d" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/run.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>" />
+</head>
+<body class="rm">
+  <div id="topbar" class="topbar"></div>
+  <main class="wrap">
+    <div class="rm-head">
+      <div>
+        <div class="id" id="run-id"></div>
+        <h1 id="run-name"></h1>
+        <div class="sub" id="run-sub"></div>
+      </div>
+      <div class="status">
+        <span class="pill"><span class="dot"></span><span id="run-status"></span></span>
+        <div class="bar"><i></i></div>
+        <div class="cyc" id="run-progress"></div>
+      </div>
+    </div>
+    <div class="rm-grid" id="tiles"></div>
+    <div class="rm-two">
+      <div class="panel"><div class="ph"><span id="flowcell-title"></span><span class="r" id="flowcell-note"></span></div><div class="pb"><div class="flowcell" id="flowcell"></div></div></div>
+      <div class="panel"><div class="ph"><span id="heat-title"></span><span class="r" id="heat-note"></span></div><div class="pb"><svg class="heat" id="heat" aria-label="Skill intensity by year"></svg></div></div>
+    </div>
+    <div class="rm-two">
+      <div class="panel"><div class="ph"><span id="sheet-title"></span><span class="r">SampleSheet.csv</span></div><div class="pb" style="padding:0"><table class="sheet" id="sheet"><thead><tr><th>Sample_ID</th><th>Index</th><th>Description</th></tr></thead><tbody></tbody></table></div></div>
+      <div class="panel"><div class="ph"><span id="log-title"></span><span class="r">RunInfo.log</span></div><pre class="log" id="log"></pre></div>
+    </div>
+    <p class="rm-note" id="run-note"></p>
+  </main>
+  <script type="module" src="assets/js/run/index.js"></script>
+</body>
+</html>
