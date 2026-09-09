@@ -6,6 +6,7 @@ const content = JSON.parse(readFileSync(new URL("../data/content.json", import.m
 
 test("profile.career_start is YYYY.MM", () => {
   assert.match(content.profile.career_start, /^\d{4}\.\d{2}$/);
+  assert.equal(content.profile.career_start, "2015.03");
 });
 
 test("skills are objects with name/chrom/af/dp", () => {
@@ -17,14 +18,25 @@ test("skills are objects with name/chrom/af/dp", () => {
   }
   const dp = Object.fromEntries(content.skills.map((s) => [s.name, s.dp]));
   for (const k of ["Machine Learning", "LLM", "GenAI", "GCP", "AWS"]) assert.equal(dp[k], 2, k);
+  const pinnedDp = {
+    Genomics: 11,
+    NGS: 11,
+    Epigenomics: 9,
+    Multiomics: 6,
+    Python: 11,
+    "Pipeline Engineering": 9,
+  };
+  for (const [k, v] of Object.entries(pinnedDp)) assert.equal(dp[k], v, k);
 });
 
 test("skill_timeline rows match the year span", () => {
   const { years, rows } = content.skill_timeline;
+  assert.deepEqual(years, [2012, 2026]);
   const span = years[1] - years[0] + 1;
   assert.ok(rows.length >= 3);
   for (const r of rows) {
     assert.equal(r.values.length, span, r.label.en);
+    assert.equal(r.values.length, 15, r.label.en);
     assert.ok(r.values.every((v) => Number.isInteger(v) && v >= 0 && v <= 4), r.label.en);
     assert.equal(typeof r.label.ko, "string");
   }
@@ -38,6 +50,19 @@ test("publications carry pdb metadata", () => {
     assert.equal(typeof p.blurb.en, "string");
     assert.equal(typeof p.blurb.ko, "string");
   }
+  const ctcfTitles = content.publications.filter((p) => p.title.includes("CTCF"));
+  assert.equal(ctcfTitles.length, 2);
+  for (const p of ctcfTitles) {
+    assert.equal(p.pdb, "5T0U", p.title);
+    assert.equal(p.pdb_chain, "A", p.title);
+  }
+  const p53Title = content.publications.find((p) => p.title.includes("p53"));
+  assert.ok(p53Title, "p53 publication");
+  assert.equal(p53Title.pdb, "1TUP");
+  assert.equal(p53Title.pdb_chain, "B");
+  const runx3Title = content.publications.find((p) => p.title.includes("RUNX3"));
+  assert.ok(runx3Title, "RUNX3 publication");
+  assert.equal(runx3Title.pdb, null);
 });
 
 test("every new i18n key has en and ko", () => {
