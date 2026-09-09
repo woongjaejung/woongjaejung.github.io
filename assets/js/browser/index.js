@@ -1,6 +1,7 @@
 import { boot, state, t, pk, el, onLang, showLoadError, viewHref } from "../shell.mjs";
 import { normalizeSkills, VIEWS } from "../logic.mjs";
 import { initIdeogram } from "./ideogram.mjs";
+import { startHelix } from "./helix.mjs";
 
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 let ideogram = null;
@@ -90,7 +91,7 @@ async function init() {
   document.documentElement.dataset.view = "browser";
   renderAll();
   onLang(renderAll);
-  // TASK 8: startHelix(...) is called here
+  startHelix({ canvas: document.getElementById("helix"), ticker: document.getElementById("ticker"), motif: state.content.profile.hero_motif, reduce });
   // TASK 10: initStructureDrawer() is called here
 }
 
