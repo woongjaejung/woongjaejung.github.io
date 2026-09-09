@@ -47,9 +47,9 @@ function storeTheme(theme) {
   }
 }
 
-function setTheme(theme) {
+function setTheme(theme, persist = true) {
   state.theme = theme;
-  storeTheme(theme);
+  if (persist) storeTheme(theme);
   document.documentElement.dataset.theme = theme;
   applyToggleLabels();
 }
@@ -318,7 +318,7 @@ async function init() {
       try { localStorage.setItem("view", a.dataset.view); } catch { /* ignore */ }
     })
   );
-  setTheme(resolveInitialTheme(readStoredTheme()));
+  setTheme(resolveInitialTheme(readStoredTheme()), false);
 
   state.content = await loadJSON("data/content.json");
   try {
