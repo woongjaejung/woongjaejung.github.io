@@ -123,7 +123,7 @@ test("every new i18n key has en and ko", () => {
     "run_instrument", "run_chemistry", "run_readlength", "run_started", "run_progress",
     "hero_eyebrow", "footer_views", "log_pre", "log_started", "log_lane", "log_index", "log_peak", "log_first", "log_qc",
     "log_cluster", "log_pushed", "log_tail", "unit_years", "unit_projects", "unit_peer_reviewed", "run_first_author",
-    "run_instrument_value", "run_chemistry_value", "run_readlength_value",
+    "run_instrument_value", "run_chemistry_value", "run_readlength_value", "unit_lanes",
   ];
   for (const k of keys) {
     assert.equal(typeof content.i18n[k]?.en, "string", `${k}.en`);
@@ -262,6 +262,7 @@ Object.assign(c.i18n, {
   run_instrument_value: { en: "Field scientist, gen 3", ko: "필드 사이언티스트 3세대" },
   run_chemistry_value: { en: "Genomics + AI", ko: "유전체학 + AI" },
   run_readlength_value: { en: "2 × 150 (EN/KO)", ko: "2 × 150 (한/영)" },
+  unit_lanes: { en: "lanes", ko: "레인" },
 });
 
 const exonOverrides = {
@@ -684,7 +685,7 @@ export function timelineScale(items, now) {
 export function layoutGenes(genes, totalKb = 100, minGap = 2) {
   let lens = genes.map((g) => 8 + g.exons.length * 4.5);
   let sum = lens.reduce((a, b) => a + b, 0);
-  const room = totalKb - minGap * (genes.length + 1);
+  const room = Math.max(totalKb * 0.5, totalKb - minGap * (genes.length + 1)); // never let gaps eat the whole track
   if (sum > room) { const k = room / sum; lens = lens.map((l) => l * k); sum = room; } // shrink to fit, keep min gaps
   const gap = (totalKb - sum) / (genes.length + 1);
   let pos = gap;
@@ -1255,7 +1256,7 @@ Copy the `<style>` block of `docs/design/genome-browser-mockup.html` **from the 
    :root[data-theme="dark"]{ --paper:#0f1319; --surface:#161b23; --ink:#e7eaef; --body:#c3c9d2; --muted:#8b94a1; --rule:#2a313c; --rule-soft:#1f2530;
      --nA:#4cbf78; --nC:#5f93ea; --nG:#f0b247; --nT:#ea6b6b; --nN:#6f7884; --band1:#2c333d; --band2:#4a535e; --band3:#9aa3ae; --track-head:#131820; --hover:#1b212b; --shadow:0 12px 32px rgba(0,0,0,.5); }
    ```
-3. Change `.ideo{… top:49px}` to `top:var(--topbar-h,49px)` and add `.hintbar ~ .ideo{top:calc(var(--topbar-h,49px) + 31px)}` so the hint bar does not overlap it. Add `html{scroll-padding-top:120px}`.
+3. Change `.ideo{… top:49px}` to `top:var(--topbar-h,49px)` and add `.hintbar:not([hidden]) ~ .ideo{top:calc(var(--topbar-h,49px) + 31px)}` so a visible hint bar does not overlap it (the bar stays in the DOM when dismissed, so the selector must be state-aware). Add `html{scroll-padding-top:120px}`.
 4. Delete the mockup's `.hidden{display:none!important}` rule (base.css already provides `[hidden]{display:none!important}`) and delete the copied `--mono`, `--sans`, `--disp` declarations from `:root` — base.css defines them with `"Noto Sans KR"` in the stack and browser.css must not override them.
 5. Keep `body{font-family:var(--sans)}` (resolves to base.css's stack, which includes Noto Sans KR); add `.skip-link{position:absolute;left:-999px} .skip-link:focus{left:12px;top:60px;background:var(--surface);padding:8px;z-index:50}`.
 6. Add `.table-body{padding:0 0 4px} @media (max-width:600px){ .info-col, table.vcf td:nth-child(6){display:none} .ideo text{display:none} .ideo text.current{display:block} }`.
@@ -1379,7 +1380,11 @@ function renderContact() {
   document.getElementById("export").replaceChildren(...cards);
   document.getElementById("footer-updated").textContent = state.updatedAt ? `${t("footer_updated")}: ${state.updatedAt.slice(0, 10)}` : "";
   const views = document.getElementById("footer-views");
-  views.replaceChildren(el("span", "k", t("footer_views")), ...VIEWS.filter((v) => v !== "browser").map((v) => link(t(`view_${v}`), viewHref(v), "chip")));
+  views.replaceChildren(el("span", "k", t("footer_views")), ...VIEWS.filter((v) => v !== "browser").map((v) => {
+    const a = el("a", "chip", t(`view_${v}`)); a.href = viewHref(v); // same tab, and remember the choice like the top bar does
+    a.addEventListener("click", () => { try { localStorage.setItem("view", v); } catch { /* ignore */ } });
+    return a;
+  }));
 }
 
 function applyStaticText() {
@@ -1845,12 +1850,12 @@ export async function openStructure(p) {
 
   setLoading(t("structure_loading"));
   try { await loadLib(); } catch { setLoading(t("structure_lib_failed")); return; }
-  let pdb;
-  try { pdb = await fetchPdb(pdb); } catch { setLoading(t("structure_fetch_failed")); return; }
+  let pdbText;
+  try { pdbText = await fetchPdb(pdb); } catch { setLoading(t("structure_fetch_failed")); return; }
   if (d.hidden) return; // closed while loading
   if (!viewer) viewer = $3Dmol.createViewer(document.getElementById("stage"), { backgroundColor: "#0b1118" });
   viewer.clear();
-  viewer.addModel(pdb, "pdb");
+  viewer.addModel(pdbText, "pdb");
   viewer.setStyle({}, {});
   viewer.setStyle({ chain: p.pdb_chain || "A" }, { cartoon: { color: "spectrum" } });
   viewer.setStyle({ resn: ["DA", "DT", "DG", "DC"] }, { stick: { radius: 0.22, colorscheme: "whiteCarbon" } });
@@ -2006,10 +2011,10 @@ function renderTiles() {
 }
 
 function renderFlowcell() {
-  document.getElementById("flowcell-title").textContent = `${t("run_flowcell")} · ${genes().length} lanes`;
-  document.getElementById("flowcell-note").textContent = t("run_flowcell_note");
   const fc = document.getElementById("flowcell");
-  if (!state.repos) { fc.replaceChildren(el("p", "fallback", t("projects_fallback"))); return; }
+  document.getElementById("flowcell-note").textContent = t("run_flowcell_note");
+  if (!state.repos) { document.getElementById("flowcell-title").textContent = t("run_flowcell"); fc.replaceChildren(el("p", "fallback", t("projects_fallback"))); return; }
+  document.getElementById("flowcell-title").textContent = `${t("run_flowcell")} · ${genes().length} ${t("unit_lanes")}`;
   fc.replaceChildren(...genes().map((g, i) => {
     const lane = el("a", "lane"); lane.href = g.html_url; lane.target = "_blank"; lane.rel = "noopener";
     const canvas = el("canvas"); lane.appendChild(canvas);
