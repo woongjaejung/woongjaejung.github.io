@@ -20,7 +20,7 @@ export function el(tag, className, text) {
 }
 
 export function t(key, vars) {
-  let s = translate(state.content.i18n, key, state.lang);
+  let s = translate(state.content?.i18n, key, state.lang);
   if (vars) for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, String(v));
   return s;
 }
@@ -112,6 +112,7 @@ export async function boot({ view, themeFallback = "dark", showLocus = false, sh
   state.view = view;
   if (view === "browser") {
     const wanted = resolveInitialView(read("view"), location.search);
+    // redirecting: content stays null — callers must check state.content before rendering
     if (wanted !== "browser") { location.replace(viewHref(wanted)); return state; }
   }
   setTheme(resolveInitialTheme(read("theme"), themeFallback));
