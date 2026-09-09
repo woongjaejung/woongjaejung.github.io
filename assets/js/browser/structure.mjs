@@ -1,4 +1,4 @@
-import { state, t, pk, el } from "../shell.mjs";
+import { t, pk, el } from "../shell.mjs";
 import { normalizePdb } from "../logic.mjs";
 
 const LIB = "https://cdn.jsdelivr.net/npm/3dmol@2.5.5/build/3Dmol-min.js";
@@ -8,6 +8,8 @@ let libPromise = null, viewer = null, reduceMotion = false, returnTo = null, ope
 function loadLib() {
   if (!libPromise) libPromise = new Promise((res, rej) => {
     const s = document.createElement("script"); s.src = LIB; s.onload = res; s.onerror = () => { libPromise = null; rej(new Error("3dmol load failed")); };
+    s.crossOrigin = "anonymous";
+    s.integrity = "sha384-OsczYbldvrHgslr9fFp/i4GiLSeuw9l+QIlv99ITw8soOwXcoGeflFMLg+CU/X1d";
     document.head.appendChild(s);
   });
   return libPromise;

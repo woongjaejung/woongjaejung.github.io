@@ -68,6 +68,10 @@ export function normalizeTimeline(tl) {
   if (!tl || !Array.isArray(tl.years) || tl.years.length !== 2 || !Array.isArray(tl.rows)) {
     return { years: [], rows: [], warnings: [] };
   }
+  const span = tl.years[1] - tl.years[0];
+  if (!Number.isInteger(span) || span < 0 || span > 60) {
+    return { years: [], rows: [], warnings: ["skill_timeline.years span is invalid"] };
+  }
   const years = [];
   for (let y = tl.years[0]; y <= tl.years[1]; y++) years.push(y);
   const warnings = [];

@@ -99,7 +99,7 @@ table.vcf td.id{font-family:var(--sans);font-weight:500}
 
 /* popup */
 .popup{position:absolute;z-index:40;width:min(360px,92vw);background:var(--surface);border:1px solid var(--rule);border-radius:6px;box-shadow:var(--shadow);padding:0;font-size:13px}
-.popup{position:fixed}
+.popup{position:fixed;max-height:calc(100vh - 24px);overflow:auto}
 .popup header{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:12px}
 .popup header b{font-weight:500}
 .popup header .x{margin-left:auto;color:var(--muted);padding:2px 6px}
@@ -136,6 +136,8 @@ table.vcf td.id{font-family:var(--sans);font-weight:500}
   .info-col, table.vcf td:nth-child(6){display:none}
   .ideo text{display:none}
   .ideo text.current{display:block}
+  .track-head{flex-wrap:wrap}
+  .track-head .right{margin-left:0}
 }
 
 @media (prefers-reduced-motion: reduce){

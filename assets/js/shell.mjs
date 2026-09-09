@@ -33,10 +33,10 @@ async function loadJSON(path) {
   return res.json();
 }
 
-export function setTheme(theme) {
+export function setTheme(theme, persist = true) {
   state.theme = theme;
   document.documentElement.dataset.theme = theme;
-  write("theme", theme);
+  if (persist) write("theme", theme);
   renderToggleLabels();
 }
 
@@ -108,6 +108,11 @@ function renderTopbar({ view, showLocus, showTheme }) {
   bar.after(hint);
 }
 
+function syncTopbarHeight() {
+  const bar = document.getElementById("topbar");
+  if (bar) document.documentElement.style.setProperty("--topbar-h", `${bar.offsetHeight}px`);
+}
+
 export async function boot({ view, themeFallback = "dark", showLocus = false, showTheme = true }) {
   state.view = view;
   if (view === "browser") {
@@ -115,7 +120,7 @@ export async function boot({ view, themeFallback = "dark", showLocus = false, sh
     // redirecting: content stays null — callers must check state.content before rendering
     if (wanted !== "browser") { location.replace(viewHref(wanted)); return state; }
   }
-  setTheme(resolveInitialTheme(read("theme"), themeFallback));
+  setTheme(resolveInitialTheme(read("theme"), themeFallback), showTheme);
   state.content = await loadJSON("data/content.json");
   try {
     const data = await loadJSON("data/repos.json");
@@ -129,6 +134,8 @@ export async function boot({ view, themeFallback = "dark", showLocus = false, sh
   state.lang = resolveInitialLang(read("lang"));
   document.documentElement.lang = state.lang;
   renderTopbarText();
+  syncTopbarHeight();
+  window.addEventListener("resize", syncTopbarHeight);
   return state;
 }
 

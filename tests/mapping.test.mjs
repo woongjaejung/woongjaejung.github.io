@@ -35,6 +35,13 @@ test("normalizeTimeline: missing input yields empty rows", () => {
   assert.deepEqual(normalizeTimeline(undefined), { years: [], rows: [], warnings: [] });
 });
 
+test("normalizeTimeline: invalid year span (too large or descending) yields empty rows with a warning", () => {
+  assert.deepEqual(normalizeTimeline({ years: [2012, 202600], rows: [] }),
+    { years: [], rows: [], warnings: ["skill_timeline.years span is invalid"] });
+  assert.deepEqual(normalizeTimeline({ years: [2020, 2010], rows: [] }),
+    { years: [], rows: [], warnings: ["skill_timeline.years span is invalid"] });
+});
+
 test("normalizePdb: accepts 4-char ids, upper-cases, rejects garbage", () => {
   assert.equal(normalizePdb("5t0u"), "5T0U");
   assert.equal(normalizePdb(null), null);
