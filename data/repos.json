@@ -1,6 +1,15 @@
 {
-  "updated_at": "2026-09-09T03:03:07.374Z",
+  "updated_at": "2026-09-09T15:32:05.036Z",
   "repos": [
+    {
+      "name": "targetflow",
+      "description": "Local evidence-backed target review workbench with human approval and an optional AI evaluation lab. English and Korean UI.",
+      "language": "Python",
+      "topics": [],
+      "stars": 0,
+      "pushed_at": "2026-09-09T15:29:56Z",
+      "html_url": "https://github.com/woongjaejung/targetflow"
+    },
     {
       "name": "serviceflow",
       "description": "Synthetic customer-service workflow demo with English/Korean UI, explicit confirmation, durable processing, and cost-aware evaluation.",
