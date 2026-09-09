@@ -100,3 +100,89 @@ export function runId(careerStart) {
   if (!ym) return "JAE-00000000";
   return `JAE-${ym.y}${String(ym.m).padStart(2, "0")}01`;
 }
+
+const NGS_KEYS = ["bioinformatics", "ica", "illumina", "dragen", "ngs", "clinical-genomics", "clinical genomics",
+  "cnv", "sequencing", "bcl-convert", "genomics", "variant"];
+const AI_KEYS = ["rag", "llm", "agent", "ai-safety", "evaluation", "mistral", "genai"];
+export const CHROMOSOMES = ["chrAI", "chrNGS", "chrInfra"];
+
+function hasKeyword(repo, keys) {
+  const topics = (repo.topics || []).map((x) => String(x).toLowerCase());
+  const desc = String(repo.description || "").toLowerCase();
+  return keys.some((k) => topics.includes(k) || new RegExp(`(^|[^a-z0-9])${k.replace(/[-.]/g, "\\$&")}([^a-z0-9]|$)`).test(desc));
+}
+
+export function chromosomeOf(repo, overrides = {}) {
+  const forced = overrides?.[repo.name]?.chromosome;
+  if (CHROMOSOMES.includes(forced)) return forced;
+  if (hasKeyword(repo, NGS_KEYS)) return "chrNGS";
+  if (hasKeyword(repo, AI_KEYS)) return "chrAI";
+  return "chrInfra";
+}
+
+export function exonsOf(repo, overrides = {}) {
+  const forced = overrides?.[repo.name]?.exons;
+  if (Array.isArray(forced) && forced.length) return forced.slice(0, 6);
+  const parts = String(repo.description || "")
+    .split(/,|;|\+| — |: /)
+    .map((s) => s.trim())
+    .filter(Boolean);
+  if (parts.length <= 1) return [repo.name];
+  return parts.slice(0, 6).map((s) => truncateToWidth(s, 180)); // ≤26 chars per exon label
+}
+
+export function langColorKey(language) {
+  return { Python: "C", JavaScript: "G", Shell: "T", HTML: "A" }[language] ?? "N";
+}
+
+function fractionalYear(text) {
+  const m = /^(\d{4})\.(\d{2})$/.exec(text);
+  return m ? Number(m[1]) + (Number(m[2]) - 1) / 12 : null;
+}
+
+export function parsePeriod(text, now) {
+  const parts = String(text || "").split(/\s*[–-]\s*/).map((s) => s.trim());
+  if (parts.length === 0 || parts.length > 2) return null;
+  const start = fractionalYear(parts[0]);
+  if (start == null) return null;
+  if (parts.length === 1) return { start, end: start };
+  const end = /^present$/i.test(parts[1]) ? now.getFullYear() + now.getMonth() / 12 : fractionalYear(parts[1]);
+  if (end == null) return null;
+  return { start, end };
+}
+
+export function timelineScale(items, now) {
+  const starts = items.map((x) => parsePeriod(x.period, now)?.start).filter((v) => v != null);
+  const t0 = starts.length ? Math.floor(Math.min(...starts)) : now.getFullYear() - 1;
+  return { t0, t1: now.getFullYear() + 1 };
+}
+
+export function layoutGenes(genes, totalKb = 100, minGap = 2) {
+  let lens = genes.map((g) => 8 + g.exons.length * 4.5);
+  let sum = lens.reduce((a, b) => a + b, 0);
+  const room = Math.max(totalKb * 0.5, totalKb - minGap * (genes.length + 1)); // never let gaps eat the whole track
+  if (sum > room) { const k = room / sum; lens = lens.map((l) => l * k); sum = room; } // shrink to fit, keep min gaps
+  const gap = (totalKb - sum) / (genes.length + 1);
+  let pos = gap;
+  return genes.map((g, i) => {
+    const out = { name: g.name, x0: pos, x1: pos + lens[i] };
+    pos += lens[i] + gap;
+    return out;
+  });
+}
+
+export function truncateToWidth(text, px, charPx = 6.9) {
+  const max = Math.floor(px / charPx);
+  if (text.length <= max) return text;
+  return text.slice(0, Math.max(0, max - 1)) + "…";
+}
+
+export function groupByChromosome(repos, overrides = {}) {
+  const buckets = Object.fromEntries(CHROMOSOMES.map((c) => [c, []]));
+  for (const r of repos || []) {
+    buckets[chromosomeOf(r, overrides)].push({ ...r, exons: exonsOf(r, overrides), colorKey: langColorKey(r.language) });
+  }
+  return CHROMOSOMES
+    .map((name) => ({ name, genes: buckets[name].sort((a, b) => (b.pushed_at || "").localeCompare(a.pushed_at || "")) }))
+    .filter((g) => g.genes.length > 0);
+}
