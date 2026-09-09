@@ -109,7 +109,8 @@ function renderLog() {
   for (const line of buildRunLog(state.content, state.repos, state.now, state.lang, logLabels())) {
     log.append(el("span", "t", line.date), "  ", el("span", cls[line.level], line.level.padEnd(4)), "  ", `${line.text}\n`);
   }
-  const today = state.now.toISOString().slice(0, 10);
+  const n = state.now;
+  const today = `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`;
   log.append(el("span", "t", today), "  ", el("span", "ok", "INFO"), "  ", `${t("log_tail")} `, el("span", "cur"));
 }
 
