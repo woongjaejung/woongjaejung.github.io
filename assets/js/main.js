@@ -4,6 +4,7 @@ import {
   translate,
   repoDescription,
   pick,
+  normalizeSkills,
 } from "./logic.mjs";
 
 const state = { lang: "en", theme: "dark", content: null, repos: null, updatedAt: null };
@@ -98,7 +99,7 @@ function applyStaticText() {
 function renderSkills() {
   const wrap = document.getElementById("skill-list");
   wrap.replaceChildren(
-    ...state.content.skills.map((s) => el("span", "skill-chip", s))
+    ...normalizeSkills(state.content.skills).map((s) => el("span", "skill-chip", s.name))
   );
 }
 

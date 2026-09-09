@@ -31,3 +31,18 @@ export function resolveInitialTheme(stored) {
   if (stored === "dark" || stored === "light") return stored;
   return "dark";
 }
+
+export function normalizeSkills(skills) {
+  if (!Array.isArray(skills)) return [];
+  return skills.map((s) =>
+    typeof s === "string"
+      ? { name: s, chrom: "other", af: null, dp: null, info: "" }
+      : {
+          name: String(s.name ?? ""),
+          chrom: s.chrom ?? "other",
+          af: typeof s.af === "number" ? s.af : null,
+          dp: Number.isInteger(s.dp) ? s.dp : null,
+          info: s.info ?? "",
+        }
+  );
+}
