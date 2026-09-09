@@ -3,7 +3,7 @@ import { normalizePdb } from "../logic.mjs";
 
 const LIB = "https://cdn.jsdelivr.net/npm/3dmol@2.5.5/build/3Dmol-min.js";
 const pdbCache = new Map();
-let libPromise = null, viewer = null, reduceMotion = false, returnTo = null;
+let libPromise = null, viewer = null, reduceMotion = false, returnTo = null, openSeq = 0;
 
 function loadLib() {
   if (!libPromise) libPromise = new Promise((res, rej) => {
@@ -34,6 +34,7 @@ export function initStructureDrawer({ reduce }) {
 export function closeStructure() {
   const d = document.getElementById("drawer");
   if (d.hidden) return;
+  openSeq++;
   d.hidden = true;
   document.body.style.overflow = "";
   if (viewer) viewer.spin(false);
@@ -41,6 +42,7 @@ export function closeStructure() {
 }
 
 export async function openStructure(p) {
+  const token = ++openSeq;
   const pdb = normalizePdb(p.pdb);
   const d = document.getElementById("drawer");
   returnTo = document.activeElement;
@@ -62,19 +64,28 @@ export async function openStructure(p) {
   if (!pdb) { setLoading(t("structure_none")); return; }
 
   setLoading(t("structure_loading"));
-  try { await loadLib(); } catch { setLoading(t("structure_lib_failed")); return; }
+  try { await loadLib(); } catch { if (token !== openSeq || d.hidden) return; setLoading(t("structure_lib_failed")); return; }
+  if (token !== openSeq || d.hidden) return; // closed or superseded while loading the library
   let pdbText;
-  try { pdbText = await fetchPdb(pdb); } catch { setLoading(t("structure_fetch_failed")); return; }
-  if (d.hidden) return; // closed while loading
-  if (!viewer) viewer = $3Dmol.createViewer(document.getElementById("stage"), { backgroundColor: "#0b1118" });
-  viewer.clear();
-  viewer.addModel(pdbText, "pdb");
-  viewer.setStyle({}, {});
-  viewer.setStyle({ chain: p.pdb_chain || "A" }, { cartoon: { color: "spectrum" } });
-  viewer.setStyle({ resn: ["DA", "DT", "DG", "DC"] }, { stick: { radius: 0.22, colorscheme: "whiteCarbon" } });
-  viewer.setStyle({ resn: "ZN" }, { sphere: { radius: 1.1, color: "#e2a63c" } });
-  viewer.zoomTo();
-  viewer.render();
+  try { pdbText = await fetchPdb(pdb); } catch { if (token !== openSeq || d.hidden) return; setLoading(t("structure_fetch_failed")); return; }
+  if (token !== openSeq || d.hidden) return; // closed or superseded while fetching the structure
+
+  try {
+    if (!viewer) viewer = $3Dmol.createViewer(document.getElementById("stage"), { backgroundColor: "#0b1118" });
+    viewer.clear();
+    viewer.addModel(pdbText, "pdb");
+    viewer.setStyle({}, {});
+    viewer.setStyle({ chain: p.pdb_chain || "A" }, { cartoon: { color: "spectrum" } });
+    viewer.setStyle({ resn: ["DA", "DT", "DG", "DC"] }, { stick: { radius: 0.22, colorscheme: "whiteCarbon" } });
+    viewer.setStyle({ resn: "ZN" }, { sphere: { radius: 1.1, color: "#e2a63c" } });
+    viewer.zoomTo();
+    viewer.render();
+  } catch (err) {
+    console.warn("3Dmol viewer failed:", err);
+    viewer = null;
+    setLoading(t("structure_lib_failed"));
+    return;
+  }
   setLoading("");
   if (!reduceMotion) viewer.spin("y", 0.35);
   hud.textContent = `${pdb} · ${p.gene} · ${t("structure_hint")}`;
