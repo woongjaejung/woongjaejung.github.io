@@ -219,6 +219,7 @@ export function buildRunLog(content, repos, now, lang, labels = LOG_LABELS_EN) {
     if (date) out.push({ date, level: "MARK", text: `${labels.index} · ${pick(e.degree, lang)}` });
   }
   for (const p of content.publications || []) {
+    if (!p.year) continue;
     const first = /first/i.test(p.authors || "");
     out.push({ date: `${p.year}-07-01`, level: "MARK", text: `${labels.peak} · ${p.venue}${first ? ` · ${labels.first}` : ""}` });
   }

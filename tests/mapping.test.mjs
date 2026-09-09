@@ -149,7 +149,10 @@ test("buildRunLog merges sources, marks pre-career entries, sorts ascending", ()
       { period: "2012.02 – 2015.02", title: { en: "RA", ko: "조교" }, org: { en: "Immunology", ko: "면역학" } },
     ],
     education: [{ period: "2022.08", degree: { en: "Ph.D.", ko: "박사" }, school: { en: "S", ko: "S" } }],
-    publications: [{ year: "2021", venue: "NAR", authors: "First author", title: "t" }],
+    publications: [
+      { year: "2021", venue: "NAR", authors: "First author", title: "t" },
+      { venue: "X", authors: "Co-author" },
+    ],
   };
   const repos = [{ name: "newest", pushed_at: "2026-08-16T06:10:36Z" }, { name: "older", pushed_at: "2026-07-01T00:00:00Z" }];
   const log = buildRunLog(content, repos, new Date(2026, 8, 9), "en");
@@ -159,6 +162,8 @@ test("buildRunLog merges sources, marks pre-career entries, sorts ascending", ()
   assert.equal(log[4].text, "Lane switch · Illumina Korea · Senior FAS");
   assert.equal(log[2].text, "Peak called · NAR · First author");
   assert.equal(log[6].text, "Cluster PF · newest pushed");
+  assert.equal(log.length, 7); // year-less publication produces no row
+  assert.ok(log.every((l) => !l.date.startsWith("undefined")));
 });
 
 test("buildRunLog uses the supplied labels", () => {
