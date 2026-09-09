@@ -120,7 +120,7 @@ export async function boot({ view, themeFallback = "dark", showLocus = false, sh
     // redirecting: content stays null — callers must check state.content before rendering
     if (wanted !== "browser") { location.replace(viewHref(wanted)); return state; }
   }
-  setTheme(resolveInitialTheme(read("theme"), themeFallback), showTheme);
+  setTheme(resolveInitialTheme(read("theme"), themeFallback), false);
   state.content = await loadJSON("data/content.json");
   try {
     const data = await loadJSON("data/repos.json");
