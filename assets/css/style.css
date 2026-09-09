@@ -209,6 +209,9 @@ a:hover { text-decoration: underline; }
 }
 .toggle:hover { border-color: var(--accent); color: var(--accent); }
 .toggle:active { transform: scale(0.96); }
+.toggle.view-link { text-decoration: none; color: var(--muted); }
+.toggle.view-link:hover { color: var(--accent); }
+@media (max-width: 620px) { .toggle { padding: 0.38rem 0.55rem; letter-spacing: 0.06em; } }
 
 /* ── bento grid ──────────────────────────── */
 

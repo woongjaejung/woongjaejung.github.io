@@ -313,6 +313,11 @@ async function init() {
     .addEventListener("click", () =>
       setTheme(state.theme === "dark" ? "light" : "dark")
     );
+  document.querySelectorAll(".view-link").forEach((a) =>
+    a.addEventListener("click", () => {
+      try { localStorage.setItem("view", a.dataset.view); } catch { /* ignore */ }
+    })
+  );
   setTheme(resolveInitialTheme(readStoredTheme()));
 
   state.content = await loadJSON("data/content.json");
