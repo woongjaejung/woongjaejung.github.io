@@ -75,6 +75,12 @@ test("exonsOf: splits description on separators, caps at 6, falls back to name",
   const long = exonsOf(repo("r", "short, a very long clause that keeps going well past the label budget"));
   assert.equal(long[1].length, 26);
   assert.ok(long[1].endsWith("…"));
+  const overrideLong = exonsOf(repo("r", "x, y"), {
+    r: { exons: ["a very long override label that exceeds the twenty-six character budget", "b", "c", "d", "e", "f", "g"] },
+  });
+  assert.equal(overrideLong.length, 6);
+  assert.equal(overrideLong[0].length, 26);
+  assert.ok(overrideLong[0].endsWith("…"));
 });
 
 test("langColorKey maps languages to nucleotide keys", () => {

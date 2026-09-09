@@ -122,7 +122,7 @@ export function chromosomeOf(repo, overrides = {}) {
 
 export function exonsOf(repo, overrides = {}) {
   const forced = overrides?.[repo.name]?.exons;
-  if (Array.isArray(forced) && forced.length) return forced.slice(0, 6);
+  if (Array.isArray(forced) && forced.length) return forced.slice(0, 6).map((s) => truncateToWidth(String(s), 180));
   const parts = String(repo.description || "")
     .split(/,|;|\+| — |: /)
     .map((s) => s.trim())
