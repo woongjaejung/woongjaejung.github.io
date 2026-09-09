@@ -168,6 +168,16 @@
         "PWA shell",
         "no public ports"
       ]
+    },
+    "targetflow": {
+      "exons": [
+        "evidence briefs",
+        "target review",
+        "human approval",
+        "AI evaluation lab",
+        "TCGA · Open Targets · DepMap",
+        "EN/KO UI"
+      ]
     }
   },
   "i18n": {
