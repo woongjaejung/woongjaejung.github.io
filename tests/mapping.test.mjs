@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   normalizeSkills, normalizeTimeline, normalizePdb, careerYears, runId,
   chromosomeOf, exonsOf, langColorKey, parsePeriod, timelineScale, layoutGenes, truncateToWidth, groupByChromosome,
+  buildRunLog, LOG_LABELS_EN,
 } from "../assets/js/logic.mjs";
 
 const repo = (name, description, topics = [], language = "Python", pushed_at = "2026-08-01T00:00:00Z") =>
@@ -137,4 +138,31 @@ test("groupByChromosome drops empty chromosomes and sorts by pushed_at desc", ()
   assert.deepEqual(groups[0].genes.map((g) => g.name), ["new", "old"]);
   assert.equal(groups[0].genes[0].colorKey, "G");
   assert.deepEqual(groups[0].genes[1].exons, ["old"]); // no separators in the description → the name is the single exon
+});
+
+test("buildRunLog merges sources, marks pre-career entries, sorts ascending", () => {
+  const content = {
+    profile: { career_start: "2015.03", award: { en: "2024 MVP", ko: "2024 MVP", year: "2024" } },
+    experience: [
+      { period: "2022.09 – Present", title: { en: "Senior FAS", ko: "시니어" }, org: { en: "Illumina Korea", ko: "일루미나" } },
+      { period: "2015.03 – 2017.02", title: { en: "Researcher", ko: "연구원" }, org: { en: "Soongsil", ko: "숭실" } },
+      { period: "2012.02 – 2015.02", title: { en: "RA", ko: "조교" }, org: { en: "Immunology", ko: "면역학" } },
+    ],
+    education: [{ period: "2022.08", degree: { en: "Ph.D.", ko: "박사" }, school: { en: "S", ko: "S" } }],
+    publications: [{ year: "2021", venue: "NAR", authors: "First author", title: "t" }],
+  };
+  const repos = [{ name: "newest", pushed_at: "2026-08-16T06:10:36Z" }, { name: "older", pushed_at: "2026-07-01T00:00:00Z" }];
+  const log = buildRunLog(content, repos, new Date(2026, 8, 9), "en");
+  assert.deepEqual(log.map((l) => l.date), ["2012-02-01", "2015-03-01", "2021-07-01", "2022-08-01", "2022-09-01", "2024-12-01", "2026-08-16"]);
+  assert.deepEqual(log.map((l) => l.level), ["PRE", "INFO", "MARK", "MARK", "INFO", "NOTE", "INFO"]);
+  assert.equal(log[1].text, "Run started · Soongsil · Researcher");
+  assert.equal(log[4].text, "Lane switch · Illumina Korea · Senior FAS");
+  assert.equal(log[2].text, "Peak called · NAR · First author");
+  assert.equal(log[6].text, "Cluster PF · newest pushed");
+});
+
+test("buildRunLog uses the supplied labels", () => {
+  const content = { profile: { career_start: "2015.03" }, experience: [{ period: "2015.03 – Present", title: { en: "R" }, org: { en: "O" } }] };
+  const log = buildRunLog(content, [], new Date(2026, 8, 9), "en", { ...LOG_LABELS_EN, started: "런 시작" });
+  assert.equal(log[0].text, "런 시작 · O · R");
 });

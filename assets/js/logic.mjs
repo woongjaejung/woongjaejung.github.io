@@ -186,3 +186,45 @@ export function groupByChromosome(repos, overrides = {}) {
     .map((name) => ({ name, genes: buckets[name].sort((a, b) => (b.pushed_at || "").localeCompare(a.pushed_at || "")) }))
     .filter((g) => g.genes.length > 0);
 }
+
+function ymToDate(text, day = "01") {
+  const m = /^(\d{4})\.(\d{2})$/.exec(String(text || "").trim());
+  return m ? `${m[1]}-${m[2]}-${day}` : null;
+}
+
+export const LOG_LABELS_EN = { pre: "Pre-run", started: "Run started", lane: "Lane switch", index: "Index read complete", peak: "Peak called", first: "First author", qc: "QC flag", cluster: "Cluster PF", pushed: "pushed" };
+
+export function buildRunLog(content, repos, now, lang, labels = LOG_LABELS_EN) {
+  const out = [];
+  const careerStart = fractionalYear(content.profile?.career_start || "") ?? -Infinity;
+  const exp = (content.experience || [])
+    .map((x) => ({ x, p: parsePeriod(x.period, now) }))
+    .filter((e) => e.p)
+    .sort((a, b) => a.p.start - b.p.start);
+  let started = false;
+  for (const { x, p } of exp) {
+    const date = ymToDate(String(x.period).split(/\s*[–-]\s*/)[0]);
+    const org = pick(x.org, lang).split(",")[0];
+    if (p.start < careerStart) {
+      out.push({ date, level: "PRE", text: `${labels.pre} · ${org} · ${pick(x.title, lang)}` });
+    } else if (!started) {
+      started = true;
+      out.push({ date, level: "INFO", text: `${labels.started} · ${org} · ${pick(x.title, lang)}` });
+    } else {
+      out.push({ date, level: "INFO", text: `${labels.lane} · ${org} · ${pick(x.title, lang)}` });
+    }
+  }
+  for (const e of content.education || []) {
+    const date = ymToDate(e.period);
+    if (date) out.push({ date, level: "MARK", text: `${labels.index} · ${pick(e.degree, lang)}` });
+  }
+  for (const p of content.publications || []) {
+    const first = /first/i.test(p.authors || "");
+    out.push({ date: `${p.year}-07-01`, level: "MARK", text: `${labels.peak} · ${p.venue}${first ? ` · ${labels.first}` : ""}` });
+  }
+  const award = content.profile?.award;
+  if (award?.year) out.push({ date: `${award.year}-12-01`, level: "NOTE", text: `${labels.qc} · ${pick(award, lang)}` });
+  const newest = (repos || []).slice().sort((a, b) => (b.pushed_at || "").localeCompare(a.pushed_at || ""))[0];
+  if (newest?.pushed_at) out.push({ date: newest.pushed_at.slice(0, 10), level: "INFO", text: `${labels.cluster} · ${newest.name} ${labels.pushed}` });
+  return out.sort((a, b) => a.date.localeCompare(b.date));
+}
