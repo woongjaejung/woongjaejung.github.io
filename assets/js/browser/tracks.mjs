@@ -30,7 +30,7 @@ function renderGenes() {
     return;
   }
   const groups = groupByChromosome(repos, state.content.repo_overrides);
-  const top = 34, rowH = 70;
+  const top = 34, rowH = 84;
   svg.setAttribute("viewBox", `0 0 1100 ${top + groups.length * rowH + 20}`);
   document.getElementById("projects-meta").textContent = t("projects_track_meta", { n: repos.length, k: groups.length });
   note.textContent = t("projects_track_note");
@@ -62,7 +62,14 @@ function renderGenes() {
         const ex = svgEl("rect", { class: "exon", x: x0 + i * ew * 2, y: y - 8, width: Math.max(ew, 6), height: 16, fill: col, rx: 1.5 });
         const title = svgEl("title"); title.textContent = name; ex.appendChild(title); grp.appendChild(ex);
       });
-      grp.appendChild(text({ x: x0, y: y + 24, class: "genelbl" }, g.name));
+      const ly = gi % 2 === 0 ? y + 24 : y + 38;
+      const limit = layout[gi + 2] ? kb(layout[gi + 2].x0) - 6 : TR;
+      const label = truncateToWidth(g.name, limit - x0, 6.6);
+      let lx = x0, anchor = "start";
+      if (x0 + label.length * 6.6 > TR) { lx = TR; anchor = "end"; }
+      const lbl = text({ x: lx, y: ly, class: "genelbl", "text-anchor": anchor }, label);
+      const lblTitle = svgEl("title"); lblTitle.textContent = g.name; lbl.appendChild(lblTitle);
+      grp.appendChild(lbl);
       button(grp, g.name, (e) => openPopup(g, chr.name, e));
       svg.appendChild(grp);
     });
@@ -122,7 +129,7 @@ function renderCoverage(t0, t1, tx) {
   document.getElementById("experience-meta").textContent = t("experience_track_meta", { t0, t1: t1 - 1, n: items.length });
   ruler(svg, 22, t0, t1, tx);
   const base = 120, unit = Math.min(22, 88 / Math.max(items.length, 1));
-  svg.appendChild(text({ x: TL - 8, y: base - items.length * unit - 12, class: "rowlbl", "text-anchor": "end" }, "depth"));
+  svg.appendChild(text({ x: TL - 8, y: base - items.length * unit - 8, class: "rowlbl", "text-anchor": "end" }, "depth"));
   items.forEach((_, i) => {
     const h = i + 1;
     svg.appendChild(svgEl("line", { x1: TL, x2: TR, y1: base - h * unit, y2: base - h * unit, stroke: "var(--rule-soft)", "stroke-dasharray": "2 4" }));
@@ -160,12 +167,16 @@ function renderPeaks(t0, t1, tx, onPeak) {
     g.appendChild(svgEl("line", { x1: TL, x2: TR, y1: y + 12, y2: y + 12, stroke: "var(--rule-soft)" }));
     const first = /first/i.test(p.authors || "");
     g.appendChild(svgEl("path", { d: `M${x - 16} ${y + 12} Q${x - 6} ${y + 11} ${x - 3} ${y - 4} Q${x} ${y - 14} ${x + 3} ${y - 4} Q${x + 6} ${y + 11} ${x + 16} ${y + 12} Z`, fill: first ? "var(--nT)" : "var(--nG)", "fill-opacity": 0.85 }));
-    const label = text({ x: x + 24, y: y + 2, class: "peaklbl" }, truncateToWidth(p.title, TR - x - 24));
+    const leftSide = x > (TL + TR) / 2;
+    const lx = leftSide ? x - 24 : x + 24;
+    const anchor = leftSide ? "end" : "start";
+    const widthBudget = leftSide ? x - 24 - TL : TR - x - 24;
+    const label = text({ x: lx, y: y + 2, class: "peaklbl", "text-anchor": anchor }, truncateToWidth(p.title, widthBudget));
     const full = svgEl("title"); full.textContent = p.title; label.appendChild(full);
     g.appendChild(label);
     const pdb = normalizePdb(p.pdb);
     const meta = [p.year, p.venue, p.authors, pdb ? `PDB ${pdb}` : null].filter(Boolean).join(" · ");
-    g.appendChild(text({ x: x + 24, y: y + 16, class: "peakmeta" }, truncateToWidth(meta, TR - x - 24, 6.3)));
+    g.appendChild(text({ x: lx, y: y + 16, class: "peakmeta", "text-anchor": anchor }, truncateToWidth(meta, widthBudget, 6.3)));
     button(g, p.title, () => onPeak(p));
     svg.appendChild(g);
   });
@@ -181,10 +192,17 @@ function renderMarkers(t0, t1, tx) {
   ruler(svg, 22, t0, t1, tx);
   const y = 50;
   svg.appendChild(svgEl("line", { x1: TL, x2: TR, y1: y, y2: y, stroke: "var(--rule-soft)" }));
-  items.forEach(({ e, p }, i) => {
+  // first pass: compute dy, offsetting the EARLIER member of a crowded pair so its
+  // stem/labels don't cross the later item's labels
+  items.forEach((item, i) => {
+    if (item.dy == null) item.dy = 0;
+    if (i > 0 && item.p.start - items[i - 1].p.start <= 2 && !items[i - 1].dy && !items[i - 1].offsetDone) {
+      items[i - 1].dy = 32;
+      items[i - 1].offsetDone = true;
+    }
+  });
+  items.forEach(({ e, p, dy }, i) => {
     const x = tx(p.start);
-    const crowded = i > 0 && p.start - items[i - 1].p.start <= 2 && !(items[i - 1].dy);
-    const dy = crowded ? 32 : 0; items[i].dy = dy;
     const last = i === items.length - 1;
     svg.appendChild(svgEl("line", { x1: x, x2: x, y1: y + dy, y2: y - 16, stroke: "var(--nA)", "stroke-width": 1.5 }));
     svg.appendChild(svgEl("circle", { cx: x, cy: y - 19, r: 4.5, fill: "var(--nA)" }));
