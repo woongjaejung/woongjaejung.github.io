@@ -1,0 +1,28 @@
+/* Shared shell: top bar + hint bar. Tokens here are consumed by browser.css / run.css. */
+:root {
+  --tb-bg: #ffffff; --tb-ink: #1c2330; --tb-muted: #6a7383; --tb-rule: #d7dbe0; --tb-paper: #f3f4f1; --tb-accent: #2f6fd8;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sans: "IBM Plex Sans", "Noto Sans KR", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --disp: "Bricolage Grotesque", "IBM Plex Sans", "Noto Sans KR", system-ui, sans-serif;
+}
+:root[data-theme="dark"] { --tb-bg: #161b23; --tb-ink: #e7eaef; --tb-muted: #8b94a1; --tb-rule: #2a313c; --tb-paper: #0f1319; --tb-accent: #5f93ea; }
+:root[data-view="run"] { --tb-bg: #0d141b; --tb-ink: #d5dfe6; --tb-muted: #7d8b98; --tb-rule: #1d2833; --tb-paper: #06090d; --tb-accent: #4fb8b1; }
+
+.topbar { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: 18px; padding: 10px 20px;
+  background: var(--tb-bg); border-bottom: 1px solid var(--tb-rule); color: var(--tb-ink); font-family: var(--sans); }
+.topbar .brand { font-family: var(--disp); font-weight: 700; font-size: 17px; letter-spacing: -.01em; color: inherit; text-decoration: none; display: flex; align-items: baseline; gap: 6px; }
+.topbar .brand small { font-family: var(--mono); font-weight: 400; font-size: 11px; color: var(--tb-muted); }
+.topbar .views { display: flex; border: 1px solid var(--tb-rule); border-radius: 6px; overflow: hidden; }
+.topbar .views a { padding: 6px 12px; font-family: var(--mono); font-size: 12px; color: var(--tb-muted); text-decoration: none; border-right: 1px solid var(--tb-rule); }
+.topbar .views a:last-child { border-right: 0; }
+.topbar .views a[aria-current="page"] { background: var(--tb-ink); color: var(--tb-paper); }
+.topbar .locus { margin-left: auto; display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; color: var(--tb-muted); }
+.topbar .locus input { font: inherit; color: var(--tb-ink); background: var(--tb-paper); border: 1px solid var(--tb-rule); border-radius: 4px; padding: 5px 8px; width: 220px; }
+.topbar .locus .go, .topbar .tb-toggle { font: inherit; font-family: var(--mono); font-size: 12px; padding: 5px 10px; border: 1px solid var(--tb-rule); border-radius: 4px; background: none; color: var(--tb-muted); cursor: pointer; }
+.topbar .locus[hidden] + .tb-toggle { margin-left: auto; }
+.topbar :focus-visible { outline: 2px solid var(--tb-accent); outline-offset: 2px; }
+.hintbar { display: flex; gap: 12px; align-items: center; padding: 6px 20px; font-family: var(--mono); font-size: 12px; color: var(--tb-muted); background: var(--tb-paper); border-bottom: 1px solid var(--tb-rule); }
+.hintbar button { font: inherit; background: none; border: 0; color: var(--tb-accent); cursor: pointer; padding: 0; }
+.load-error { font-family: var(--sans); padding: 24px; }
+[hidden] { display: none !important; } /* author display rules above must not defeat the hidden attribute */
+@media (max-width: 760px) { .topbar { gap: 10px; padding: 8px 12px; } .topbar .locus input { width: 130px; } .topbar .brand small { display: none; } }
