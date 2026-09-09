@@ -3,10 +3,10 @@ import { normalizeSkills, VIEWS } from "../logic.mjs";
 import { initIdeogram } from "./ideogram.mjs";
 import { startHelix } from "./helix.mjs";
 import { renderTracks } from "./tracks.mjs";
+import { initStructureDrawer, openStructure } from "./structure.mjs";
 
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 let ideogram = null;
-let openStructure = () => {}; // TASK 10 replaces this with the real import
 const SECTION_WEIGHTS = { about: 110, projects: 260, experience: 190, publications: 150, education: 90, skills: 120, contact: 80 };
 
 function link(text, href, className = "chip") {
@@ -94,7 +94,7 @@ async function init() {
   renderAll();
   onLang(renderAll);
   startHelix({ canvas: document.getElementById("helix"), ticker: document.getElementById("ticker"), motif: state.content.profile.hero_motif, reduce });
-  // TASK 10: initStructureDrawer() is called here
+  initStructureDrawer({ reduce });
 }
 
 init().catch((err) => { console.error(err); showLoadError(); });
