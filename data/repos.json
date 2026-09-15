@@ -1,6 +1,15 @@
 {
-  "updated_at": "2026-09-09T15:32:05.036Z",
+  "updated_at": "2026-09-15T03:22:35.532Z",
   "repos": [
+    {
+      "name": "let-me-work",
+      "description": "macOS menu bar away-mode switch: pointer nudge + idle-sleep prevention",
+      "language": "Swift",
+      "topics": [],
+      "stars": 0,
+      "pushed_at": "2026-09-15T01:30:19Z",
+      "html_url": "https://github.com/woongjaejung/let-me-work"
+    },
     {
       "name": "targetflow",
       "description": "Local evidence-backed target review workbench with human approval and an optional AI evaluation lab. English and Korean UI.",
