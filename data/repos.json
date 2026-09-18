@@ -1,6 +1,56 @@
 {
-  "updated_at": "2026-09-15T03:22:35.532Z",
+  "updated_at": "2026-09-18T03:10:07.757Z",
   "repos": [
+    {
+      "name": "ICA_usage_dashboard_showcase",
+      "description": "Synthetic public showcase of an ICA analysis usage dashboard",
+      "language": null,
+      "topics": [
+        "dashboard",
+        "fastapi",
+        "ica",
+        "illumina",
+        "pandas",
+        "python",
+        "usage-analytics"
+      ],
+      "stars": 0,
+      "pushed_at": "2026-09-18T01:24:53Z",
+      "html_url": "https://github.com/woongjaejung/ICA_usage_dashboard_showcase"
+    },
+    {
+      "name": "ICA_CSV_Batch_Runner_showcase",
+      "description": "Synthetic story-led showcase of a preflight-safe ICA CSV batch runner",
+      "language": "Python",
+      "topics": [
+        "bioinformatics",
+        "github-pages",
+        "ica",
+        "illumina",
+        "synthetic-data",
+        "workflow-automation"
+      ],
+      "stars": 0,
+      "pushed_at": "2026-09-18T01:22:03Z",
+      "html_url": "https://github.com/woongjaejung/ICA_CSV_Batch_Runner_showcase"
+    },
+    {
+      "name": "dragen-cnv-plot-builder-showcase",
+      "description": "Public showcase of an exon-level CNV review aid for DRAGEN output: one interactive HTML plot so a reviewer can judge whether a copy-number call is a true CNV or a capture artifact. Synthetic demo, no patient data.",
+      "language": "Python",
+      "topics": [
+        "bioinformatics",
+        "clinical-genomics",
+        "cnv",
+        "dragen",
+        "electron",
+        "plotly",
+        "variant-review"
+      ],
+      "stars": 0,
+      "pushed_at": "2026-09-18T01:22:01Z",
+      "html_url": "https://github.com/woongjaejung/dragen-cnv-plot-builder-showcase"
+    },
     {
       "name": "let-me-work",
       "description": "macOS menu bar away-mode switch: pointer nudge + idle-sleep prevention",
@@ -103,56 +153,6 @@
       "stars": 0,
       "pushed_at": "2026-08-08T15:46:01Z",
       "html_url": "https://github.com/woongjaejung/tailterm"
-    },
-    {
-      "name": "ICA_CSV_Batch_Runner_showcase",
-      "description": "Synthetic story-led showcase of a preflight-safe ICA CSV batch runner",
-      "language": "Python",
-      "topics": [
-        "bioinformatics",
-        "github-pages",
-        "ica",
-        "illumina",
-        "synthetic-data",
-        "workflow-automation"
-      ],
-      "stars": 0,
-      "pushed_at": "2026-07-29T15:56:47Z",
-      "html_url": "https://github.com/woongjaejung/ICA_CSV_Batch_Runner_showcase"
-    },
-    {
-      "name": "dragen-cnv-plot-builder-showcase",
-      "description": "Public showcase of an exon-level CNV review aid for DRAGEN output: one interactive HTML plot so a reviewer can judge whether a copy-number call is a true CNV or a capture artifact. Synthetic demo, no patient data.",
-      "language": "Python",
-      "topics": [
-        "bioinformatics",
-        "clinical-genomics",
-        "cnv",
-        "dragen",
-        "electron",
-        "plotly",
-        "variant-review"
-      ],
-      "stars": 0,
-      "pushed_at": "2026-07-29T12:38:57Z",
-      "html_url": "https://github.com/woongjaejung/dragen-cnv-plot-builder-showcase"
-    },
-    {
-      "name": "ICA_usage_dashboard_showcase",
-      "description": "Synthetic public showcase of an ICA analysis usage dashboard",
-      "language": null,
-      "topics": [
-        "dashboard",
-        "fastapi",
-        "ica",
-        "illumina",
-        "pandas",
-        "python",
-        "usage-analytics"
-      ],
-      "stars": 0,
-      "pushed_at": "2026-07-29T06:52:30Z",
-      "html_url": "https://github.com/woongjaejung/ICA_usage_dashboard_showcase"
     },
     {
       "name": "clinical-genomics-emr-bridge",
