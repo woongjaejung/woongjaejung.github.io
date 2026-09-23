@@ -178,6 +178,9 @@
         "TCGA · Open Targets · DepMap",
         "EN/KO UI"
       ]
+    },
+    "herdr-study-kit": {
+      "description_ko": "Herdr(AI 에이전트용 tmux) 시각 학습 가이드 + 실습 키트 — 단축키 시뮬레이터, 원격(Tailscale·SSH) 구조도, CLI 리뷰어 스폰 스크립트"
     }
   },
   "i18n": {
