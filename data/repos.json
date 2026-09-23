@@ -1,6 +1,22 @@
 {
-  "updated_at": "2026-09-18T03:10:07.757Z",
+  "updated_at": "2026-09-23T07:09:35.514Z",
   "repos": [
+    {
+      "name": "herdr-study-kit",
+      "description": "Herdr(에이전트용 tmux) 시각 학습 가이드 + 실습 키트 — visual study guide, labs and automation scripts for the Herdr agent multiplexer",
+      "language": "HTML",
+      "topics": [
+        "ai-agents",
+        "claude-code",
+        "herdr",
+        "korean",
+        "study-notes",
+        "tmux"
+      ],
+      "stars": 0,
+      "pushed_at": "2026-09-23T07:09:01Z",
+      "html_url": "https://github.com/woongjaejung/herdr-study-kit"
+    },
     {
       "name": "ICA_usage_dashboard_showcase",
       "description": "Synthetic public showcase of an ICA analysis usage dashboard",
