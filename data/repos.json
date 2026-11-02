@@ -1,6 +1,15 @@
 {
-  "updated_at": "2026-09-24T03:07:38.497Z",
+  "updated_at": "2026-11-02T04:23:50.383Z",
   "repos": [
+    {
+      "name": "claudex5-engineering-harness",
+      "description": "Global, installable orchestration harness for using Claude Code and OpenAI Codex together with role-based agent routing and review gates",
+      "language": "Python",
+      "topics": [],
+      "stars": 0,
+      "pushed_at": "2026-11-01T11:07:51Z",
+      "html_url": "https://github.com/woongjaejung/claudex5-engineering-harness"
+    },
     {
       "name": "herdr-study-kit",
       "description": "Herdr(에이전트용 tmux) 시각 학습 가이드 + 실습 키트 — visual study guide, labs and automation scripts for the Herdr agent multiplexer",
@@ -118,15 +127,6 @@
       "stars": 0,
       "pushed_at": "2026-08-22T19:31:53Z",
       "html_url": "https://github.com/woongjaejung/squad-multi-agent"
-    },
-    {
-      "name": "claudex5-engineering-harness",
-      "description": "Global, installable orchestration harness for using Claude Code and OpenAI Codex together with role-based agent routing and review gates",
-      "language": "Python",
-      "topics": [],
-      "stars": 0,
-      "pushed_at": "2026-08-16T06:10:36Z",
-      "html_url": "https://github.com/woongjaejung/claudex5-engineering-harness"
     },
     {
       "name": "opspilot-enterprise-agent",
