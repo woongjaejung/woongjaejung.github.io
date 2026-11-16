@@ -1,6 +1,24 @@
 {
-  "updated_at": "2026-11-02T04:23:50.383Z",
+  "updated_at": "2026-11-16T01:50:28.751Z",
   "repos": [
+    {
+      "name": "outcomeos-showcase",
+      "description": "OutcomeOS showcase: an AI customer-operations agent for a fictional diagnostics lab. Human approval for risky writes, 776-scenario evaluation recorded on Claude Sonnet 5.5, measured results vs targets.",
+      "language": null,
+      "topics": [
+        "ai-agents",
+        "claude",
+        "customer-support",
+        "fastapi",
+        "human-in-the-loop",
+        "llm-evaluation",
+        "python",
+        "synthetic-data"
+      ],
+      "stars": 0,
+      "pushed_at": "2026-11-16T01:47:20Z",
+      "html_url": "https://github.com/woongjaejung/outcomeos-showcase"
+    },
     {
       "name": "claudex5-engineering-harness",
       "description": "Global, installable orchestration harness for using Claude Code and OpenAI Codex together with role-based agent routing and review gates",
