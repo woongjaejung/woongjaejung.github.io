@@ -1,6 +1,25 @@
 {
-  "updated_at": "2026-11-21T05:36:53.627Z",
+  "updated_at": "2026-11-22T05:01:51.606Z",
   "repos": [
+    {
+      "name": "outcomeos-showcase",
+      "description": "OutcomeOS showcase: an AI customer-operations agent for a fictional diagnostics lab. Human approval for risky writes, 776-scenario suite (2,064 live runs on three LLM vendors), and a Terraform AWS deployment verified with failure drills.",
+      "language": null,
+      "topics": [
+        "ai-agents",
+        "aws",
+        "customer-support",
+        "fastapi",
+        "human-in-the-loop",
+        "llm-evaluation",
+        "python",
+        "synthetic-data",
+        "terraform"
+      ],
+      "stars": 0,
+      "pushed_at": "2026-11-21T08:01:29Z",
+      "html_url": "https://github.com/woongjaejung/outcomeos-showcase"
+    },
     {
       "name": "dragen-cnv-plot-builder-showcase",
       "description": "Unofficial pure-Rust + Tauri v2 showcase of an exon-level CNV review aid for DRAGEN output (~25-35x faster, 23 MB portable). 100% synthetic demo, not an official Illumina product.",
@@ -18,24 +37,6 @@
       "stars": 0,
       "pushed_at": "2026-11-21T01:15:56Z",
       "html_url": "https://github.com/woongjaejung/dragen-cnv-plot-builder-showcase"
-    },
-    {
-      "name": "outcomeos-showcase",
-      "description": "OutcomeOS showcase: an AI customer-operations agent for a fictional diagnostics lab. Human approval for risky writes, 776-scenario evaluation recorded on Claude Sonnet 5.5, measured results vs targets.",
-      "language": null,
-      "topics": [
-        "ai-agents",
-        "claude",
-        "customer-support",
-        "fastapi",
-        "human-in-the-loop",
-        "llm-evaluation",
-        "python",
-        "synthetic-data"
-      ],
-      "stars": 0,
-      "pushed_at": "2026-11-16T01:47:20Z",
-      "html_url": "https://github.com/woongjaejung/outcomeos-showcase"
     },
     {
       "name": "claudex5-engineering-harness",
